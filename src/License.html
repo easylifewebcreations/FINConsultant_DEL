@@ -1,0 +1,76 @@
+<!-- -------------------------- -->
+<!-- MODAL: PASSWORD MANAGEMENT -->
+<!-- -------------------------- -->
+<div class="modal fade" id="licenseManModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="licenseManModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal header start -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="licenseManModalLabel">License Management</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <!-- Modal header end -->
+
+      <!-- Modal body start -->
+      <div class="modal-body">
+
+        <!-- Card start -->
+        <div class="card">
+          <div class="card-body">
+
+            <!-- Form start -->
+            <form class="needs-validation" id="licenseManForm" onsubmit="JLicenseManFormSubmit(this)" novalidate>
+              <div class="login-form">
+
+                <!-- Row start -->
+                <div class="row">
+                  <div class="col-xl-12 col-12">
+                    <div class="row">
+
+                      <div class="col-12">
+                        <div class="mb-3">
+                          <p id="licenseAlert" name="alert" value="" />
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="mb-3">
+                          <label class="form-label">E-Mail</label>
+                          <input type="text" class="form-control" placeholder="Enter your e-mail" id="licenseEmail" name="email" required />
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="mb-3">
+                          <label class="form-label">License Code</label>
+                          <input type="text" class="form-control" placeholder="Enter your license code" id="licenseCode" name="code" required />
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <!-- Row end -->
+
+                <div class="d-flex">
+                  <div class="ms-auto">
+                    <button type="submit" class="btn btn-primary" id="licenseManSubmitButton" name="submitButton" value=""><i class="bi bi-floppy"></i> Save</button>
+                    <button type="button" class="btn btn-secondary" id="licenseManCloseButton" data-bs-dismiss="modal" disabled><i class="bi bi-x-circle"></i> Close</button>
+                  </div>
+                </div>
+
+              </div>
+
+            </form>
+            <!-- Form end -->
+
+          </div>
+        </div>
+        <!-- Card end -->
+
+      </div>
+    </div>
+  </div>
+</div>

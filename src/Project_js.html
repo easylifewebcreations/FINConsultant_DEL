@@ -1,0 +1,642 @@
+<script>
+  // ********** Global variables ********** //
+const STATE_EXIST = 'EXIST'
+const STATE_RESET = 'RESET'
+
+const MODAL = 'Modal'
+const MODAL_VIEW = 'ViewModal'
+const MODAL_SEARCH = 'SearchModal'
+const FORM = 'Form'
+const FORM_SEARCH = 'SearchForm'
+
+// License status
+const STATUS_ACTIVATED = 'ACTIVATED'
+const STATUS_NONACTIVATED = 'NONACTIVATED'
+const STATUS_EXPIRED = 'EXPIRED'
+const STATUS_DISABLED = 'DISABLED'
+const STATUS_DUPLICATE = 'DUPLICATE'
+const STATUS_NONE = 'NONE'
+
+const TEXT_ALL = 'ALL'
+const TEXT_DEFAULT = 'DEFAULT'
+
+const MODE_ADD = 'ADD'
+const MODE_EDIT = 'EDIT'
+const MODE_PENDING = 'PENDING'
+
+
+// Element type
+const SET_VALUE = 'value'
+const SET_INNERHTML = 'innerHTML'
+const SET_VALUE_SELECT2 = 'val'
+const SET_ATTRIBUTE_READONLY = 'readOnly'
+const SET_RADIO = 'radio'
+
+// Form name
+// const FORM_USER = 'userForm'
+// const FORM_CUSTOMER = 'customerForm'
+// const FORM_MAIN_CONTRACT = 'mainContractForm'
+// const FORM_HS_PLAN = 'hsPlanForm'
+// const FORM_HS_PACKAGE = 'hsPackageForm'
+// const FORM_CI_PLAN = 'ciPlanForm'
+// const FORM_AI_PLAN = 'aiPlanForm'
+// const FORM_HB_PLAN = 'hbPlanForm'
+// const FORM_WP_PLAN = 'wpPlanForm'
+// const FORM_POLICY = 'policyForm'
+
+const MSG_WELCOME = 'ยินดีต้อนรับเข้าสู่ระบบ'
+const MSG_WAITTING_PROCESS = 'กรุณารอสักครู่'
+const MSG_INPUT_FORM_ERROR = 'กรุณากรอกข้อมูลให้ครบ'
+
+
+
+// **************************************************** //
+// รายชื่อโมดูล
+// **************************************************** //
+// const MODULE_MEMBER = 'member'
+const MODULE_LICENSE = 'license'
+
+const MODULE_USER = 'user'
+// const MODULE_USER_SEARCH = 'userSearch'
+const MODULE_USER_SIGNUP = 'userSignup'
+const MODULE_PASSWORD = 'password'
+
+const MODULE_CUSTOMER = 'customer'
+// const MODULE_CUSTOMER_SEARCH = 'customerSearch'
+
+const MODULE_MAIN_CONTRACT = 'mainContract'
+// const MODULE_MAIN_CONTRACT_SEARCH = 'mainContractSearch'
+
+const MODULE_HS_PLAN = 'hsPlan'
+// const MODULE_HS_PLAN_SEARCH = 'hsPlanSearch'
+const MODULE_HS_PACKAGE = 'hsPackage'
+// const MODULE_HS_PACKAGE_SEARCH = 'hsPackageSearch'
+
+const MODULE_CI_PLAN = 'ciPlan'
+// const MODULE_CI_PLAN_SEARCH = 'ciPlanSearch'
+const MODULE_CI_PACKAGE = 'ciPackage'
+// const MODULE_CI_PACKAGE_SEARCH = 'ciPackageSearch'
+
+const MODULE_AI_PLAN = 'aiPlan'
+// const MODULE_AI_PLAN_SEARCH = 'aiPlanSearch'
+const MODULE_AI_PACKAGE = 'aiPackage'
+// const MODULE_AI_PACKAGE_SEARCH = 'aiPackageSearch'
+
+const MODULE_HB_PLAN = 'hbPlan'
+// const MODULE_HB_PLAN_SEARCH = 'hbPlanSearch'
+const MODULE_HB_PACKAGE = 'hbPackage'
+// const MODULE_HB_PACKAGE_SEARCH = 'hbPackageSearch'
+
+const MODULE_WP_PLAN = 'wpPlan'
+// const MODULE_WP_PLAN_SEARCH = 'wpPlanSearch'
+const MODULE_WP_PACKAGE = 'wpPackage'
+// const MODULE_WP_PACKAGE_SEARCH = 'wpPackageSearch'
+
+const MODULE_POLICY = 'policy'
+// const MODULE_POLICY_SEARCH = 'policySearch'
+
+
+// **************************************************** //
+// รายชื่อโมดัล
+// **************************************************** //
+const MODAL_LICENSE = 'licenseModal'
+
+const MODAL_PASSWORD = 'passwordModal'
+const MODAL_USER_SIGNUP = 'userSignupModal'
+const MODAL_USER = 'userModal'
+const MODAL_USER_SEARCH = 'userSearchModal'
+// const MODAL_USER_VIEW = 'userViewModal'
+
+const MODAL_CUSTOMER = 'customerModal'
+const MODAL_CUSTOMER_SEARCH = 'customerSearchModal'
+// const MODAL_CUSTOMER_VIEW = 'customerViewModal'
+
+const MODAL_MAIN_CONTRACT = 'mainContractModal'
+const MODAL_MAIN_CONTRACT_SEARCH = 'mainContractSearchModal'
+
+const MODAL_HS_PLAN = 'hsPlanModal'
+const MODAL_HS_PLAN_SEARCH = 'hsPlanSearchModal'
+const MODAL_HS_PACKAGE = 'hsPackageModal'
+const MODAL_HS_PACKAGE_SEARCH = 'hsPackageSearchModal'
+
+const MODAL_CI_PLAN = 'ciPlanModal'
+const MODAL_CI_PLAN_SEARCH = 'ciPlanSearchModal'
+const MODAL_CI_PACKAGE = 'ciPackageModal'
+const MODAL_CI_PACKAGE_SEARCH = 'ciPackageSearchModal'
+
+const MODAL_AI_PLAN = 'aiPlanModal'
+const MODAL_AI_PLAN_SEARCH = 'aiPlanSearchModal'
+const MODAL_AI_PACKAGE = 'aiPackageModal'
+const MODAL_AI_PACKAGE_SEARCH = 'aiPackageSearchModal'
+
+const MODAL_HB_PLAN = 'hbPlanModal'
+const MODAL_HB_PLAN_SEARCH = 'hbPlanSearchModal'
+const MODAL_HB_PACKAGE = 'hbPackageModal'
+const MODAL_HB_PACKAGE_SEARCH = 'hbPackageSearchModal'
+
+const MODAL_WP_PLAN = 'wpPlanModal'
+const MODAL_WP_PLAN_SEARCH = 'wpPlanSearchModal'
+const MODAL_WP_PACKAGE = 'wpPackageModal'
+const MODAL_WP_PACKAGE_SEARCH = 'wpPackageSearchModal'
+
+const MODAL_POLICY = 'policyModal'
+const MODAL_POLICY_SEARCH = 'policySearchModal'
+
+
+
+// **************************************************** //
+// รายชื่อ spreadsheet & sheet
+// **************************************************** //
+// Members spreadsheet
+const SPREADSHEET_MEMBERS = 'members'
+const SHEET_MEMBER_DETAILS = 'member_details'
+
+// Initial spreadsheet
+const SPREADSHEET_INITIAL = 'initial'
+const SHEET_FILES = 'files'
+const SHEET_FORDERS = 'folders'
+const SHEET_LICENSE = 'license'
+
+// Users spreadsheet
+const SPREADSHEET_USERS = 'users'
+const SHEET_USER_DETAILS = 'user_details'
+
+// Customers spreadsheet
+const SPREADSHEET_CUSTOMERS = 'customers'
+const SHEET_CUSTOMER_DETAILS = 'customer_details'
+
+// Contracts spreadsheet
+const SPREADSHEET_CONTRACTS = 'contracts'
+const SHEET_MAIN_CONTRACTS = 'main_contracts'
+
+// Policies spreadsheet
+const SPREADSHEET_POLICIES = 'policies'
+const SHEET_POLICY_DETAILS = 'policy_details'
+const SHEET_MAIN_CONTRACT_DETAILS = 'main_contract_details'
+const SHEET_RIDER_CONTRACT_DETAILS = 'rider_contract_details'
+
+// Select options spreadsheet
+const SPREADSHEET_SELECT_OPTIONS = 'select_options'
+const SHEET_INSURERS = 'insurers'
+const SHEET_AGENTS = 'agents'
+const SHEET_APPLICATION_DOCS = 'application_docs'
+
+// Rider hs spreadsheet
+const SPREADSHEET_RIDERS = 'rider_hs'
+const SHEET_HS_PLANS = 'hs_plans'
+const SHEET_HS_PACKAGES = 'hs_packages'
+const SHEET_HS_PACKAGE_DETAILS = 'hs_package_details'
+const SHEET_HS_COVERAGE_LISTS = 'hs_coverage_lists'
+
+
+
+const SHEET_CI_PLANS = 'ci_plans'
+const SHEET_AI_PLANS = 'ai_plans'
+const SHEET_HB_PLANS = 'hb_plans'
+const SHEET_WP_PLANS = 'wp_plans'
+
+
+
+// **************************************************** //
+// ตรวจสอบโมดูล ผู้ใช้กำลังทำงานบนโมดูลไหน เช่น user, customer, ...
+// **************************************************** //
+function JRunningModule(_module) {
+  // อาเรย์ของอ็อบเจ็คโมดูล
+  const modules = [
+    // Member
+    { module: MODULE_LICENSE, modal: MODAL_LICENSE, sheetName: SHEET_MEMBER_DETAILS},
+    // User
+    { module: MODULE_USER , modal: MODAL_USER, sheetName: SHEET_USER_DETAILS},
+    // { module: MODULE_USER_SEARCH , modal: MODAL_USER_SEARCH, sheetName: SHEET_USER_DETAILS},
+    { module: MODULE_USER_SIGNUP, modal: MODAL_USER_SIGNUP, sheetName: SHEET_USER_DETAILS},
+    { module: MODULE_PASSWORD, modal: MODAL_PASSWORD, sheetName: SHEET_USER_DETAILS},
+    // Customer
+    { module: MODULE_CUSTOMER, modal: MODAL_CUSTOMER, sheetName: SHEET_CUSTOMER_DETAILS},
+    // { module: MODULE_CUSTOMER_SEARCH, modal: MODAL_CUSTOMER_SEARCH, sheetName: SHEET_CUSTOMER_DETAILS},
+    // Main contract
+    { module: MODULE_MAIN_CONTRACT, modal: MODAL_MAIN_CONTRACT, sheetName: SHEET_MAIN_CONTRACTS},
+    // { module: MODULE_MAIN_CONTRACT_SEARCH, modal: MODAL_MAIN_CONTRACT_SEARCH, sheetName: SHEET_MAIN_CONTRACTS},
+    // Hs plan
+    { module: MODULE_HS_PLAN, modal: MODAL_HS_PLAN, sheetName: SHEET_HS_PLANS},
+    // { module: MODULE_HS_PLAN_SEARCH, modal: MODAL_HS_PLAN_SEARCH, sheetName: SHEET_HS_PLANS},
+    // Hs package
+    { module: MODULE_HS_PACKAGE, modal: MODAL_HS_PACKAGE, sheetName: SHEET_HS_PACKAGES},
+    // { module: MODULE_HS_PACKAGE_SEARCH, modal: MODAL_HS_PACKAGE_SEARCH, sheetName: SHEET_HS_PLANS},
+    // Ci plan
+    { module: MODULE_CI_PLAN, modal: MODAL_CI_PLAN, sheetName: SHEET_CI_PLANS},
+    // { module: MODULE_CI_PLAN_SEARCH, modal: MODAL_CI_PLAN_SEARCH, sheetName: SHEET_CI_PLANS},
+    // Ci package
+    { module: MODULE_CI_PACKAGE, modal: MODAL_CI_PACKAGE, sheetName: SHEET_CI_PLANS},
+    // { module: MODULE_CI_PACKAGE_SEARCH, modal: MODAL_CI_PACKAGE_SEARCH, sheetName: SHEET_CI_PLANS},
+    // Ai plan
+    { module: MODULE_AI_PLAN, modal: MODAL_AI_PLAN, sheetName: SHEET_AI_PLANS},
+    // { module: MODULE_AI_PLAN_SEARCH, modal: MODAL_AI_PLAN_SEARCH, sheetName: SHEET_AI_PLANS},
+    // Ai package
+    { module: MODULE_AI_PACKAGE, modal: MODAL_AI_PACKAGE, sheetName: SHEET_AI_PLANS},
+    // { module: MODULE_AI_PACKAGE_SEARCH, modal: MODAL_AI_PACKAGE_SEARCH, sheetName: SHEET_AI_PLANS},
+    // Hb plan
+    { module: MODULE_HB_PLAN, modal: MODAL_HB_PLAN, sheetName: SHEET_HB_PLANS},
+    // { module: MODULE_HB_PLAN_SEARCH, modal: MODAL_HB_PLAN_SEARCH, sheetName: SHEET_HB_PLANS},
+    // Hb package
+    { module: MODULE_HB_PACKAGE, modal: MODAL_HB_PACKAGE, sheetName: SHEET_HB_PLANS},
+    // { module: MODULE_HB_PACKAGE_SEARCH, modal: MODAL_HB_PACKAGE_SEARCH, sheetName: SHEET_HB_PLANS},
+    // Wp plan
+    { module: MODULE_WP_PLAN, modal: MODAL_WP_PLAN, sheetName: SHEET_WP_PLANS},
+    // { module: MODULE_WP_PLAN_SEARCH, modal: MODAL_WP_PLAN_SEARCH, sheetName: SHEET_WP_PLANS},
+    // Wp package
+    { module: MODULE_WP_PACKAGE, modal: MODAL_WP_PACKAGE, sheetName: SHEET_WP_PLANS},
+    // { module: MODULE_WP_PACKAGE_SEARCH, modal: MODAL_WP_PACKAGE_SEARCH, sheetName: SHEET_WP_PLANS},    
+    // Policy
+    { module: MODULE_POLICY, modal: MODAL_POLICY, sheetName: SHEET_POLICY_DETAILS},
+    // { module: MODULE_POLICY_SEARCH, modal: MODAL_POLICY_SEARCH, sheetName: SHEET_POLICY_DETAILS},
+  ]
+
+  // ค้นหาโมดูลที่กำลังทำงาน
+  const result = modules.find(res => res.module === _module)
+  return result || null
+}
+
+
+
+// **************************************************** //
+// แสดงข้อมูลบน datatables
+// **************************************************** //
+  function JShowDataTable(_module, _data) {
+    console.log('module:', _module)
+    // เลือกคำสั่ง
+    switch (_module) {
+      case MODULE_USER:
+        JDataTableUser(_data)
+        break
+      case MODULE_CUSTOMER:
+        JDataTableCustomer(_data)
+        break
+      case MODULE_MAIN_CONTRACT:
+        JDataTableMainContract(_data)
+        break
+      case MODULE_HS_PLAN:
+        JDataTableHsPlan(_data)
+        break
+      case MODULE_HS_PACKAGE:
+        JDataTableHsPackage(_data)
+        break
+      case MODULE_CI_PLAN:
+        JDataTableCiPlan(_data)
+        break
+      case MODULE_CI_PACKAGE:
+        JDataTableCiPackage(_data)
+        break
+      case MODULE_AI_PLAN:
+        JDataTableAiPlan(_data)
+        break
+      case MODULE_AI_PACKAGE:
+        JDataTableAiPackage(_data)
+        break
+      case MODULE_HB_PLAN:
+        JDataTableHbPlan(_data)
+        break
+      case MODULE_HB_PACKAGE:
+        JDataTableHbPackage(_data)
+        break
+      case MODULE_WP_PLAN:
+        JDataTableWpPlan(_data)
+        break
+      case MODULE_WP_PACKAGE:
+        JDataTableWpPackage(_data)
+        break
+      case MODULE_POLICY :
+        JDataTablePolicy(_data)
+        break
+    }
+  }
+
+
+
+// **************************************************** //
+// กำหนดค่าฟอร์ม
+// **************************************************** //
+  function JSetDataForm(_elementObj) {
+    _elementObj.forEach(function(element) {
+      let type = element.type
+      let id = element.id
+      let value = element.value
+
+      switch (type) {
+        case SET_VALUE:
+          document.getElementById(id).value = value
+          break
+        case SET_INNERHTML:
+          document.getElementById(id).innerHTML = value
+          break
+        case SET_VALUE_SELECT2:
+          $('#' + id).val(value).trigger('change')
+          break
+        case SET_RADIO:
+          document.querySelectorAll('[name="' + id + '"]').forEach(element => {
+            (value === element.value) ? element.checked = true : element.checked = false
+          })
+          break
+        case SET_ATTRIBUTE_READONLY:
+          document.getElementById(id).readOnly = value
+          break
+      }
+    })
+  }
+
+
+
+// **************************************************** //
+// แสดงและรีเซ็ทโมดัลJSelectOptionSheet
+// **************************************************** //
+function JModalShow(_modalID, _formID) {
+  if (_formID) {
+    JResetForm(_formID)
+  }
+  $('#' + _modalID).modal('show')
+}
+
+
+
+// **************************************************** //
+// ซ่อนโมดัล
+// **************************************************** //
+function JModalHide(_modalID) {
+  $('#' + _modalID).modal('hide')
+}
+
+
+
+// **************************************************** //
+// อัปเดตค่าปุ่ม submitButton ตามสถานะการทำงาน
+// **************************************************** //
+// function JSetSubmitButtonMode(_modal, _value) {
+//   const modalElement = document.getElementById(_modal)
+//   const submitButton = modalElement.querySelector('[name="submitButton"]')
+//   console.log('submitButton before:', submitButton.value)
+//   submitButton.value = _value
+//   console.log('submitButton after:', submitButton.value)
+// }
+
+
+
+// **************************************************** //
+// เปิดโมดัลหลักของโมดูล เช่น โมดัลค้นหา, เพิ่มข้อมูล, แสดงข้อมูล
+// **************************************************** //
+function JModalSearchShow(_element){
+  // ค้นหาไอดีฟอร์มภายในโมดัล
+  const modalID = _element.value + MODAL_SEARCH // ไอดีโมดัล
+  const modalElement = document.getElementById(modalID)
+  const form = modalElement.querySelector("form") // ฟอร์มไอดี
+  const formID = form.id
+
+  JModalShow(modalID, formID) // แสดงโมดัล
+}
+
+
+
+// **************************************************** //
+// ***** SetCheckedRadioButton ************************ //
+// **************************************************** //
+  // function JSetCheckedRadioButton(_elementName, _value) {
+  //   console.log('-----fn '+'SetCheckedRadioButton')
+  //   document.querySelectorAll('[name="' + _elementName + '"]').forEach(element => {
+  //     if (_value === element.value) {
+  //       element.checked = true
+  //     }
+  //   })
+  // }
+
+
+
+// **************************************************** //
+// ตรวจสอบความถูกต้องของข้อมูลฟอร์ม
+// **************************************************** //
+  function JHasEmptyData(_dataObj) {
+    return (_dataObj.indexOf('') !== -1) ? true : false
+  }
+
+
+
+// **************************************************** //
+// รีเซ็ทฟอร์ม โดยไอดีฟอร์ม
+// **************************************************** //
+  function JResetForm(_formID) {
+    const form = document.getElementById(_formID)
+    form.reset()
+    JResetSelect2(form)
+  }
+
+
+
+// **************************************************** //
+// รีเซ็ทฟอร์ม โดยการกดปุ่ม
+// **************************************************** //
+  function JResetFormButtonReset(_element) {
+    const formID = _element.value
+    const form = document.getElementById(formID)
+    form.reset()
+    JResetSelect2(form)
+  }
+
+
+
+// **************************************************** //
+// รีเซ็ท Select2
+// **************************************************** //
+  function JResetSelect2(_form) {
+    const elements = _form.querySelectorAll('select')
+    elements.forEach(element => {
+      let id = element.id
+      $('#' + id).val(null).trigger('change')
+    })
+  }
+
+
+
+// **************************************************** //
+// อ่านข้อมูลและกำหนดค่า Select2 จากชีท
+// **************************************************** //
+function JSelectOptionSheet() {
+  SELECT_LISTS_SHEET.forEach(list => {
+    JGetSelectOption(list, null)
+  })
+}
+
+
+
+// **************************************************** //
+// อ่านข้อมูลและกำหนดค่า Select2 จากค่าคงที่
+// **************************************************** //
+function JSelectOptionConstant() {
+  SELECT_LISTS.forEach(list => {
+    JInitialSelectElement(list)
+  })
+}
+
+
+
+// **************************************************** //
+// อ่านข้อมูลและกำหนดค่า Option ให้ Select2
+// **************************************************** //
+function JGetSelectOption(_dataObj, _criteriaObj) {
+  const sheetObj = {
+    // module: _dataObj.module,
+    sheetName: _dataObj.sheetName
+  }
+  google.script.run.withSuccessHandler(function(_responseJson) {
+    const response = JSON.parse(_responseJson)
+    const state = response.state
+    const message = response.message
+    const options = response.values
+
+    _dataObj.options = options
+    if (_criteriaObj) {
+      let newOptions = [ { id: '', text: 'โปรดเลือก' } ]
+      options.forEach (option => {
+        if (option[_criteriaObj.header] === _criteriaObj.value) {
+          newOptions.push(option)
+        }
+      })
+      _dataObj.options = newOptions
+    }
+    JInitialSelectElement(_dataObj)
+  }).GetSelectOption(JSON.stringify(sheetObj))
+}
+
+
+
+// **************************************************** //
+// กำหนดค่าให้ Select2
+// **************************************************** //
+function JInitialSelectElement(_dataObj) {
+  const element = _dataObj.element
+  const options = _dataObj.options
+  const modalID = _dataObj.modalID
+  const attribute = _dataObj.elementAttribute
+  const allowSearch = _dataObj.allowSearch
+  
+  let attText = null
+  switch (attribute) {
+    case 'id':
+      attText = '#' + element
+      break
+    case 'class':
+      attText = '.' + element
+      break
+    case 'name':
+      attText = '[name="' + element + '"]'
+      break
+  }
+
+  if (modalID) {
+    // Inside modal
+    if (allowSearch) {
+      $(attText).select2({
+        data: options,
+        theme: 'bootstrap-5',
+        width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+        placeholder: $(this).data('placeholder'),
+        allowClear: true,
+        dropdownParent: $('#' + modalID)
+      })
+    } else {
+      $(attText).select2({
+        data: options, // ข้อมูลที่จะแสดง
+        theme: 'bootstrap-5', // เลือกธีม
+        width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style', // กำหนดขนาด
+        placeholder: $(this).data('placeholder'), // ระบุ placeholder
+        allowClear: true, // เปิดใช้งานฟังก์ชั่นเคลียร์ข้อมูล
+        dropdownParent: $('#' + modalID), // ระบุ parent ของ Select2 เพื่อให้แสดงผลอย่างถูกต้อง
+        minimumResultsForSearch: Infinity // ปิด Search box
+      })
+    }
+  } else {
+    // Outside modal
+    if (allowSearch) {
+      $(attText).select2({
+        data: options,
+        theme: 'bootstrap-5',
+        width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+        placeholder: $(this).data('placeholder'),
+        allowClear: true
+      })
+    } else {
+      $(attText).select2({
+        data: options,
+        theme: 'bootstrap-5',
+        width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+        placeholder: $(this).data('placeholder'),
+        allowClear: true,
+        minimumResultsForSearch: Infinity
+      })
+    }
+  }
+}
+
+
+
+// **************************************************** //
+// อ่านข้อมูลและกำหนดค่า Option ให้ Datalist
+// **************************************************** //
+function JGetDatalistOption(_dataObj, _criteriaObj) {
+  const sheetObj = {
+    // module: _dataObj.module,
+    sheetName: _dataObj.sheetName
+  }
+  google.script.run.withSuccessHandler(function(_responseJson) {
+    // แปลงข้อมูล json เป็นอ็อบเจ็ค
+    const response = JSON.parse(_responseJson)
+    const state = response.state
+    const message = response.message
+    const options = response.values
+
+    _dataObj.options = options
+    if (_criteriaObj) {
+      let newOptions = [ { id: '', text: 'โปรดเลือก' } ]
+      options.forEach (option => {
+        if (option[_criteriaObj.header] === _criteriaObj.value) {
+          newOptions.push(option)
+        }
+      })
+      _dataObj.options = newOptions
+    }
+    JInitialDatalistElement(_dataObj)
+  }).GetSelectOption(JSON.stringify(sheetObj))
+}
+
+
+
+// **************************************************** //
+// กำหนดค่าให้ Datalist
+// **************************************************** //
+function JInitialDatalistElement(_dataObj) {
+  const element = _dataObj.element
+  const options = _dataObj.options
+  const modalID = _dataObj.modalID
+  const attribute = _dataObj.elementAttribute
+  
+  let attText = null
+  switch (attribute) {
+    case 'id':
+      attText = '#' + element
+      break
+    case 'class':
+      attText = '.' + element
+      break
+    case 'name':
+      attText = '[name="' + element + '"]'
+      break
+  }
+
+  let datalist = document.getElementById(element)
+  while (datalist.firstChild) {
+    datalist.removeChild(datalist.firstChild)
+  }
+
+  options.forEach(function(optionValue) {
+    let option = document.createElement('option')
+    option.text = optionValue.text
+    datalist.appendChild(option)
+  })
+}
+</script>

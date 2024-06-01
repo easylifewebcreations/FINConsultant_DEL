@@ -1,0 +1,601 @@
+<!-- Main Datatables start -->
+<div class="col-12">
+  <div class="card mb-4">
+    <!-- Card header start -->
+    <div class="card-header">
+      <div class="d-flex">
+        <h4 class="card-title me-auto">กรมธรรม์ประกันภัย</h4>
+
+        <div class="me-2">
+          <button type="button" class="btn btn-outline-primary" onclick="JModalOpen(this)" value='policySearchModal'><i class="bi bi-search"></i> ค้นหา </button>
+        </div>
+
+        <div>
+          <button type="button" class="btn btn-success" onclick="JAddData(this)" value="policy_cu"><i class="bi bi-file-earmark-plus"></i> เพิ่มข้อมูล </button>
+        </div>
+
+      </div>
+
+    </div>
+    <!-- Card header end -->
+
+    <!-- Card body show datatable start -->
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table align-middle table-hover m-0" id="policyTable"></table>
+      </div>
+    </div>
+    <!-- Card body show datatable end -->
+
+  </div>
+</div>
+<!-- Main Datatables end -->
+
+
+
+<!-- ------------------------------------ -->
+<!-- MODAL: Search Policy --------------- -->
+<!-- ------------------------------------ -->
+<div class="modal fade" id="policySearchModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="policySearchModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <div class="d-flex">
+          <div class="ms-auto">
+            <button type="submit" class="btn btn-primary" id="policySubmitButton" name="submitButton" value=""><i class="bi bi-search"></i> ค้นหา </button>
+            <button type="button" class="btn btn-warning" id="policyResetButton" name="resetButton" onclick="JResetFormButtonReset(this)" value="policySearchForm"><i class="bi bi-eraser"></i> ล้างข้อมูล </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> ปิด</button>
+          </div>
+        </div>
+        <h5 class="modal-title" id="policySearchModalLabel">กรมธรรม์ประกันภัย</h5>
+      </div>
+      <!-- Modal body start -->
+      <div class="modal-body">
+        <!-- Card start -->
+        <div class="card">
+          <div class="card-body">
+
+            <!-- Form start -->
+            <form role="search" id="policySearchForm" onsubmit="JSearchMultiCriteria(this)">
+              <input type="hidden" id="policySearch" name="search" value="policy_search">
+
+              <div class="login-form">
+
+                <div class="row">
+                  <div class="col-xl-12 col-12">
+                    <div class="row">
+
+                      <div class="col-4">
+                        <div class="mb-3">
+                          <label class="form-label">เลขที่กรมธรรม์</label>
+                          <input type="text" class="form-control" placeholder="เลขที่กรมธรรม์" id="policySearchPolicyNo" name="searchPolicyNo" />
+                        </div>
+                      </div>
+
+                      <div class="col-4">
+                        <div class="mb-3">
+                          <label class="form-label">ผู้เอาประกัน</label>
+                          <input type="text" class="form-control" placeholder="ผู้เอาประกัน" id="policySearchInsured" name="searchInsured" />
+                        </div>
+                      </div>
+
+                      <div class="col-4">
+                        <div class="mb-3">
+                          <label class="form-label">เจ้าของกรมธรรม์</label>
+                          <input type="text" class="form-control" placeholder="เจ้าของกรมธรรม์" id="policySearchOwnerID" name="searchOwnerID" />
+                        </div>
+                      </div>
+
+                      <div class="col-4">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">สถานะกรมธรรม์</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="policySearchPolicyStatus" name="searchPolicyStatus" ></select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-4">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">ตัวแทนบริการ</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="policySearchServiceAgentID" name="searchServiceAgentID"></select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-4">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">บริษัทประกัน</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="policySearchInsurerID" name="searchInsuredID"></select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-4">
+                        <div class="mb-3">
+                          <label class="form-label">กำหนดชำระเบี้ย เริ่มต้น</label>
+                          <!-- <input type="date" class="form-control" placeholder="วันที่เริ่มต้น" id="policySearchPaymentDateStart" name="searchPaymentDateStart" /> -->
+                          <!-- <div class="input-group"> -->
+                          <input type="text" class="form-control datepicker-range" id="policySearchPaymentDateRange" name="searchPaymentDateRange" />
+                          <!-- <span class="input-group-text">
+														<i class="bi bi-calendar4"></i>
+													</span> -->
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-4">
+                      <div class="mb-3">
+                        <label class="form-label">กำหนดชำระเบี้ย สิ้นสุด</label>
+                        <input type="date" class="form-control" id="policySearchPaymentDateEnd" name="searchPaymentDateEnd" />
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="d-flex">
+                  <div class="ms-auto">
+                    <button type="submit" class="btn btn-primary" id="policySubmitButton" name="submitButton" value=""><i class="bi bi-search"></i> ค้นหา </button>
+                    <button type="button" class="btn btn-warning" id="policyResetButton" name="resetButton" onclick="JResetFormButtonReset(this)" value="policySearchForm"><i class="bi bi-eraser"></i> ล้างข้อมูล </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> ปิด</button>
+                  </div>
+                </div> -->
+
+          </div>
+
+          </form>
+          <!-- Form end -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+<!-- ------------------------------------ -->
+<!-- MODAL: CREATE & UPDATE Main contract -->
+<!-- ------------------------------------ -->
+<div class="modal fade" id="policyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="policyModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="policyModalLabel">กรมธรรม์ประกันภัย</h5>
+      </div>
+      <!-- Modal body start -->
+      <div class="modal-body">
+        <!-- Card start -->
+        <div class="card">
+          <div class="card-body">
+
+            <div class="text-center mb-2">
+              <p id="policyProfilePicture"></p>
+            </div>
+
+            <!-- Form start -->
+            <form class="needs-validation" id="policyForm" onsubmit="JHandleFormSubmit(this)" novalidate>
+              <input type="hidden" id="policyFormProcess" name="formProcess" value="policy_cu">
+
+              <div class="login-form">
+
+                <div class="row">
+                  <div class="col-xl-12 col-12">
+
+                    <div class="row">
+
+                      <div class="col-xxl-12">
+                        <div class="bg-light p-2 mb-3 fw-bold">ข้อมูลจำเป็น</div>
+                      </div>
+
+                      <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">Policy ID</label>
+                          <input type="text" class="form-control" id="policyDataID" name="dataID" value="Auto Policy ID" readonly />
+                        </div>
+                      </div>
+
+                      <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">เลขที่กรมธรรม์</label>
+                          <input type="text" class="form-control" placeholder="เลขที่กรมธรรม์" id="policyPolicyNo" name="policyNo" value="T012345678" required />
+                        </div>
+                      </div>
+
+                      <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">ผู้เอาประกัน</label>
+                          <select class="form-select" id="policyInsuredID" name="insuredID" required></select>
+                        </div>
+                      </div>
+
+                      <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">เจ้าของกรมธรรม์</label>
+                          <select class="form-select" id="policyOwnerID" name="ownerID" required></select>
+                        </div>
+                      </div>
+
+                      <div class="col-3">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">สถานะกรมธรรม์</label>
+                            <select class="form-select" id="policyPolicyStatus" name="policyStatus" required></select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">วันที่กรมธรรม์</label>
+                          <input type="date" class="form-control" id="policyPolicyDate" name="policyDate" value="2024/04/20" required />
+                        </div>
+                      </div>
+
+                      <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">วันครบกำหนดสัญญา</label>
+                          <input type="date" class="form-control" id="policyPolicyDue" name="policyDue" value="2099/04/20" required />
+                        </div>
+                      </div>
+
+                      <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">วันครบกำหนดชำระเบี้ย(ครั้งสุดท้ายสัญญาหลัก)</label>
+                          <input type="date" class="form-control" id="policyPaymentDue" name="paymentDue" value="2033/04/20" required />
+                        </div>
+                      </div>
+
+                      <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">วันครบกำหนดชำระเบี้ย(ตามงวด)</label>
+                          <input type="date" class="form-control" id="policyPaymentDate" name="paymentDate" value="2025/04/20" required />
+                        </div>
+                      </div>
+
+                      <div class="col-3">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">ผู้รับผลประโยชน์</label>
+                            <select class="form-select" id="policyBeneficiaryID" name="beneficiaryID"></select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-3">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">ตัวแทนบริการ</label>
+                            <select class="form-select" id="policyServiceAgentID" name="serviceAgentID" required></select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-3">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">บริษัทประกัน</label>
+                            <select class="form-select" id="policyInsurerID" name="insurerID" required></select>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+
+                    <!-- Section life-plan start -->
+                    <div class="col-12">
+                      <div class="card mb-3">
+                        <!-- Card header start -->
+                        <div class="card-header">
+                          <div class="d-flex">
+                            <h5 class="card-title me-auto">ประกันชีวิต</h5>
+
+                            <!-- <div> -->
+                            <button type="button" class="btn btn-outline-success " onclick="JModalOpen(this)"><i class="bi bi-plus-square"></i></button>
+                            <!-- </div> -->
+
+                          </div>
+                        </div>
+                        <!-- Card header end -->
+
+                        <!-- Card body show datatable start -->
+                        <div class="card-body">
+                          <div class="table-responsive">
+                            <table class="table align-middle table-hover m-0" id="policyTable"></table>
+
+                          </div>
+                        </div>
+                        <!-- Card body show datatable end -->
+                      </div>
+                    </div>
+                    <!-- Section life-plan end -->
+
+                    <!-- Section health-plan start -->
+                    <div class="col-12">
+                      <div class="card mb-3">
+                        <!-- Card header start -->
+                        <div class="card-header">
+                          <div class="d-flex">
+                            <h5 class="card-title me-auto">ประกันสุขภาพ</h5>
+
+                            <!-- <div> -->
+                            <button type="button" class="btn btn-outline-primary " onclick="JModalOpen(this)" value='policySearchModal'><i class="bi bi-plus-square"></i></button>
+                            <!-- </div> -->
+
+                            <!-- <div>
+                                <button type="button" class="btn btn-success" onclick="JAddData(this)" value="policy_cu"><i class="bi bi-file-earmark-plus"></i> เพิ่มข้อมูล </button>
+                              </div> -->
+
+                          </div>
+                        </div>
+                        <!-- Card header end -->
+
+                        <!-- Card body show datatable start -->
+                        <div class="card-body">
+                          <div class="table-responsive">
+                            <table class="table align-middle table-hover m-0" id="policyTable"></table>
+
+                          </div>
+                        </div>
+                        <!-- Card body show datatable end -->
+                      </div>
+                    </div>
+                    <!-- Section health-plan end -->
+
+                    <!-- Section Life plan start -->
+                    <div class="col-xxl-12">
+                      <div class="col-11 bg-light p-2 mb-3 fw-bold">ประกันชีวิต</div>
+                      <!-- <div class="col-1"> -->
+                      <!-- <div class="ms-auto"> -->
+                      <button type="button" class="btn btn-outline-success" id="policySubmitButton" name="submitButton" onclick="addRow()"><i class="bi bi-floppy"></i> บันทึก</button>
+                      <!-- </div> -->
+                      <!-- </div> -->
+                    </div>
+
+                    <div class="col-6">
+                      <div class="mb-3">
+                        <label class="form-label">ประกันชีวิต</label>
+                        <select class="form-select" id="policyLifePlan" name="lifePlan" required></select>
+                      </div>
+                    </div>
+
+                    <div class="col-6">
+                      <div class="mb-3">
+                        <label class="form-label">จำนวนเงินเอาประกัน</label>
+                        <input type="number" class="form-control" placeholder="จำนวนเงินเอาประกัน" id="policySumInsured" name="sumInsured" value="1000000" required />
+                      </div>
+                    </div>
+                    <!-- Section Life plan end -->
+
+                    <!-- Section Health plan start -->
+                    <div class="col-xxl-12">
+                      <div class="bg-light p-2 mb-3 fw-bold">สัญญาเพิ่มเติม ประกันสุขภาพ</div>
+                    </div>
+
+                    <div class="col-12">
+                      <div class="mb-3">
+                        <label class="form-label">แผน 1</label>
+                        <select class="form-select" id="policyHealthPlan1" name="healthPlan1"></select>
+                      </div>
+                    </div>
+                    <!-- Section Health plan end -->
+
+
+                    <!-- Section CI plan start -->
+                    <div class="col-xxl-12">
+                      <div class="bg-light p-2 mb-3 fw-bold">สัญญาเพิ่มเติม ประกันโรคร้าย</div>
+                    </div>
+
+                    <div class="col-6">
+                      <div class="mb-3">
+                        <label class="form-label">แผน 1</label>
+                        <select class="form-select" id="policyCIPlan1" name="ciPlan1"></select>
+                      </div>
+                    </div>
+                    <!-- Section CI plan end -->
+
+                    <!-- Section Application document start -->
+                    <div class="col-xxl-12">
+                      <div class="bg-light p-2 mb-3 fw-bold">เอกสารประกอบ</div>
+                    </div>
+
+                    <div class="col-3">
+                      <div class="mb-3">
+                        <label class="form-label">ใบคำขอเอาประกันภัย(APP)</label>
+                        <input type="file" class="form-control" id="policyAPPFileID" name="appFileID" />
+                      </div>
+                    </div>
+                    <!-- Section Application document end -->
+
+                    <!-- <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">ใบเสนอขาย(BI)</label>
+                          <input type="file" class="form-control" id="policyBIFileID" name="biFileID" />
+                        </div>
+                      </div> -->
+
+                    <!-- <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">เอกสาร...(SQS)</label>
+                          <input type="file" class="form-control" id="policySQSFileID" name="sqsFileID" />
+                        </div>
+                      </div> -->
+
+                    <!-- <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">ใบเสร็จรับเงินชั่วคราว(TR)</label>
+                          <input type="file" class="form-control" id="policyTRFileID" name="trFileID" />
+                        </div>
+                      </div> -->
+
+                    <!-- <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">เอกสารตรวจสุขภาพทางการเงิน(FHC)</label>
+                          <input type="file" class="form-control" id="policyFHCFileID" name="fhcFileID" />
+                        </div>
+                      </div> -->
+
+                    <!-- <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">เอกสาร...(CRP)</label>
+                          <input type="file" class="form-control" id="policyCRPFileID" name="crpFileID" />
+                        </div>
+                      </div> -->
+
+                    <!-- <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">เอกสาร...(PR)</label>
+                          <input type="file" class="form-control" id="policyPRFileID" name="prFileID" />
+                        </div>
+                      </div> -->
+
+                    <!-- <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">เอกสาร...(DPC)</label>
+                          <input type="file" class="form-control" id="policyDPCFileID" name="dpcFileID" />
+                        </div>
+                      </div> -->
+
+                    <!-- <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">เอกสารผูกบัญชีชำระเบี้ยประกัน</label>
+                          <input type="file" class="form-control" id="policyBindPaymentFileID" name="bindPaymentFileID" />
+                        </div>
+                      </div> -->
+
+                    <!-- <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">หนังสือผูกบัญชีรับเงินผลประโยชน์</label>
+                          <input type="file" class="form-control" id="policyBindReceiveFileID" name="bindReceiveFileID" />
+                        </div>
+                      </div> -->
+
+                    <!-- <div class="col-3">
+                        <div class="mb-3">
+                          <label class="form-label">เอกสารอื่น ๆ</label>
+                          <input type="file" class="form-control" id="policyOtherFileID" name="otherFileID" />
+                        </div>
+                      </div> -->
+
+                    <!-- <div class="col-12">
+                        <div class="mb-3">
+                          <label class="form-label">บันทึกเพิ่มเติม</label>
+                          <textarea class="form-control" placeholder="บันทึกเพิ่มเติม" id="policyNote" name="note" rows="2"></textarea>
+                        </div>
+                      </div> -->
+
+                    <!-- </div> -->
+
+                  </div>
+                </div>
+
+                <!-- <div class="d-flex">
+                  <div class="ms-auto">
+                    <button type="submit" class="btn btn-primary" id="policySubmitButton" name="submitButton" value=""><i class="bi bi-floppy"></i> Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Close</button>
+                  </div>
+                </div> -->
+
+                <div class="d-flex">
+                  <div class="ms-auto">
+                    <button type="button" class="btn btn-secondary" id="policyCloseButton" name="closeButton"><i class="bi bi-x-circle"></i> ปิด</button>
+                    <button type="submit" class="btn btn-primary" id="policySubmitButton" name="submitButton"><i class="bi bi-floppy"></i> บันทึก</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Close</button>
+                  </div>
+                </div>
+
+              </div>
+
+            </form>
+            <!-- Form end -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ------------------------------------- -->
+<!-- MODAL: VIEW INFORMATION Main contract -->
+<!-- ------------------------------------- -->
+<div class="modal fade" id="policyViewModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="policyViewLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="policyViewLabel">ประกันชีวิต/สัญญาหลัก</h5>
+      </div>
+
+      <!-- Modal body start -->
+      <div class="modal-body">
+        <!-- Card start -->
+        <div class="card">
+          <div class="card-body">
+
+            <div class="text-center mb-4">
+              <p id="policyViewPreviewProfilePicture"></p>
+              <h5 class="m-0" id="policyViewTitleName">_Title_</h5>
+              <p class="small opacity-50" id="policyViewTitleDataID">_DataID_</p>
+            </div>
+
+            <div class="mb-4">
+              <h5>รายละเอียด</h5>
+              <ul class="list-unstyled d-flex flex-column gap-1">
+                <!-- <li>ไอดีสัญญา: <span class="text-primary" id="policyViewDataID">_DataID_</span></li> -->
+                <li>รหัสย่อ: <span class="text-primary" id="policyViewCode">_Code_</span></li>
+                <li>ชื่อภาษาไทย: <span class="text-primary" id="policyViewNameTH">_NameTH_</span></li>
+                <li>ชื่อภาษาอังกฤษ: <span class="text-primary" id="policyViewNameEN">_NameEN_</span></li>
+                <!-- <li>ประเภทระยะเวลาชำระเบี้ย: <span class="text-primary" id="policyViewPremiumPaymentPeriodType">_PremiumPaymentPeriodType_</span></li> -->
+                <li>ระยะเวลาชำระเบี้ย(ปี):
+                  <span class="text-primary" id="policyViewPremiumPaymentPeriod">_PremiumPaymentPeriod_</span>
+                </li>
+                <!-- <li>ประเภทระยะเวลาคุ้มครอง: <span class="text-primary" id="policyViewProtectionPeriodType">_ProtectionPeriodType_</span></li> -->
+                <li>ระยะเวลาคุ้มครอง(ปี):
+                  <span class="text-primary" id="policyViewProtectionPeriod">_ProtectionPeriod_</span>
+                </li>
+                <li>รูปแบบประกัน: <span class="text-primary" id="policyViewContractType">_ContractType_</span>
+                </li>
+                <li>ประเภทประกัน: <span class="text-primary" id="policyViewContractGroup">_ContractGroup_</span>
+                </li>
+                <li>สิทธิ์ลดหย่อนภาษี:
+                  <span class="text-primary" id="policyViewTaxDeduction">_TaxDeduction_</span>
+                </li>
+                <li>หมวดค่าลดหย่อนภาษี:
+                  <span class="text-primary" id="policyViewTaxDeductionType">_TaxDeductionType_</span>
+                </li>
+                <!-- <li>โบรชัวร์: <span class="text-primary" id="policyViewBrochure">_Brochure_</span></li> -->
+                <li>บริษัทประกัน:
+                  <span class="text-primary" id="policyViewInsuranceCompany">_InsuranceCompany_</span>
+                </li>
+                <li>บันทึกเพิ่มเติม: <span class="text-primary" id="policyViewNote">_Note_</span></li>
+                <li>โบรชัวร์: <span class="text-primary" id="policyViewBrochure">_Brochure_</span></li>
+              </ul>
+            </div>
+
+            <div class="d-flex">
+              <div class="ms-auto">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Close</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- Card end -->
+
+      </div>
+      <!-- Modal body end -->
+    </div>
+  </div>
+</div>

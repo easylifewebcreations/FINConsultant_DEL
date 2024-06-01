@@ -1,0 +1,698 @@
+<!-- ******************************* HS plan section ******************************* -->
+
+<!-- HS plan Datatables start -->
+<div class="col-12">
+  <div class="card mb-4">
+
+    <!-- Card header start -->
+    <div class="card-header">
+      <div class="d-flex">
+        <h4 class="card-title me-auto">แผนประกันสุขภาพ</h4>
+
+        <!-- Button Add start -->
+        <div class="me-2">
+          <button type="button" class="btn btn-outline-primary" onclick="JModalSearchShow(this)" value='hsPlan'><i class="bi bi-search"></i> ค้นหา </button>
+        </div>
+
+        <div class="me-2">
+          <button type="button" class="btn btn-outline-warning" onclick="JGetAllItems(this)" value="hsPlan"><i class="bi bi-book"></i> ข้อมูลทั้งหมด </button>
+        </div>
+
+        <div>
+          <button type="button" class="btn btn-success" onclick="JAddData(this)" value="hsPlan"><i class="bi bi-journal-plus"></i> เพิ่มข้อมูล </button>
+        </div>
+        <!-- Button Add end -->
+
+      </div>
+    </div>
+    <!-- Card header end -->
+
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table align-middle table-hover m-0" id="hsPlanTable"></table>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- HS plan Datatables end -->
+
+
+
+<!-- ------------------------------------ -->
+<!-- Modal: Search HS plan
+<!-- ------------------------------------ -->
+<div class="modal fade" id="hsPlanSearchModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="hsPlanSearchModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="hsPlanSearchModalLabel">แผนประกันสุขภาพ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <!-- Modal body start -->
+      <div class="modal-body">
+        <!-- Card start -->
+        <div class="card">
+          <div class="card-body">
+
+            <!-- Form start -->
+            <form role="search" id="hsPlanSearchForm" onsubmit="JSearchData(this)">
+              <input type="hidden" id="hsPlanSearch" name="search" value="hsPlan">
+
+              <div class="login-form">
+
+                <div class="row">
+                  <div class="col-xl-12 col-12">
+                    <div class="row">
+
+                      <div class="col-12">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">แผนประกันสุขภาพ</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="hsPlanSearchPlanID" name="searchPlanID" ></select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">บริษัทประกัน</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="hsPlanSearchInsurerID" name="searchInsurerID" ></select>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" id="hsPlanSearchSubmitButton" name="submitButton" value=""><i class="bi bi-search"></i> ค้นหา </button>
+        <button type="button" class="btn btn-danger" id="hsPlanSearchResetButton" name="resetButton" onclick="JResetFormButtonReset(this)" value="hsPlanSearchForm"><i class="bi bi-eraser"></i> ล้างข้อมูล </button>
+      </div>
+
+      </form>
+      <!-- Form end -->
+
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ------------------------------------ -->
+<!-- Modal: Create & Update HS plan ----- -->
+<!-- ------------------------------------ -->
+<div class="modal fade" id="hsPlanModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="hsPlanModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="hsPlanModalLabel">แผนประกันสุขภาพ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <!-- Modal body start -->
+      <div class="modal-body">
+        <!-- Card start -->
+        <div class="card">
+          <div class="card-body">
+            <!-- Form start -->
+            <form class="needs-validation" id="hsPlanForm" onsubmit="JFormSubmit(this)" novalidate>
+              <input type="hidden" id="hsPlanFormProcess" name="formProcess" value="hsPlan">
+
+              <div class="login-form">
+
+                <div class="row">
+                  <div class="col-xl-12 col-12">
+                    <div class="row">
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ไอดีสัญญา</label>
+                          <input type="text" class="form-control" id="hsPlanDataID" name="dataID" value="หมายเลขไอดี(อัตโนมัติ)" readonly />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ชื่อย่อ/รหัสย่อ</label>
+                          <input type="text" class="form-control" placeholder="ชื่อย่อ/รหัสย่อ" id="hsPlanCode" name="code" value="HS" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ชื่อภาษาไทย</label>
+                          <input type="text" class="form-control" placeholder="ชื่อภาษาไทย" id="hsPlanNameTH" name="nameTH" value="สุขภาพ" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ชื่อภาษาอังกฤษ</label>
+                          <input type="text" class="form-control" placeholder="ชื่อภาษาอังกฤษ" id="hsPlanNameEN" name="nameEN" value="Health" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ระยะเวลาชำระเบี้ย(ปี)</label>
+                          <input type="number" min="1" class="form-control" placeholder="ระยะเวลาชำระเบี้ย" id="hsPlanPremiumPaymentPeriod" name="premiumPaymentPeriod" value="1" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ประเภทระยะเวลาชำระเบี้ย</label>
+                          <div class="mt-2">
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="hsPlanPremiumPaymentPeriodTypeQuantity" name="premiumPaymentPeriodType" value="จำนวน" checked />
+                              <label class="form-check-label" for="inlineRadio1">จำนวนปี</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="hsPlanPremiumPaymentPeriodTypeUntil" name="premiumPaymentPeriodType" value="ถึงอายุ" />
+                              <label class="form-check-label" for="inlineRadio2">ถึงอายุ</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ระยะเวลาคุ้มครอง(ปี)</label>
+                          <input type="number" min="1" class="form-control" placeholder="ระยะเวลาคุ้มครอง" id="hsPlanProtectionPeriod" name="protectionPeriod" value="1" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ประเภทระยะเวลาคุ้มครอง</label>
+                          <div class="mt-2">
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="hsPlanProtectionPeriodTypeQuantity" name="protectionPeriodType" value="จำนวน" checked />
+                              <label class="form-check-label" for="inlineRadio1">จำนวนปี</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="hsPlanProtectionPeriodTypeUntil" name="protectionPeriodType" value="ถึงอายุ" />
+                              <label class="form-check-label" for="inlineRadio2">ถึงอายุ</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- ประกันสุขภาพ -->
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">รูปแบบประกัน</label>
+                          <input type="text" class="form-control" id="hsPlanContractType" name="contractType" value="ประกันสุขภาพ" readonly />
+                        </div>
+                      </div>
+                      <!-- <div class="col-6">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">รูปแบบประกัน</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="hsPlanContractType" name="contractType" required></select>
+                          </div>
+                        </div>
+                      </div> -->
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">ประเภทประกัน</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="hsPlanContractGroup" name="contractGroup" required></select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">สิทธิ์ลดหย่อนภาษี</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="hsPlanTaxDeduction" name="taxDeduction" required></select>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- หมวดประกันสุขภาพ -->
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">หมวดค่าลดหย่อนภาษี</label>
+                          <input type="text" class="form-control" id="hsPlanTaxDeductionType" name="taxDeductionType" value="หมวดประกันสุขภาพ" readonly />
+                        </div>
+                      </div>
+                      <!-- <div class="col-6">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">หมวดค่าลดหย่อนภาษี</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="hsPlanTaxDeductionType" name="taxDeductionType" required></select>
+                          </div>
+                        </div>
+                      </div> -->
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">โบรชัวร์/เอกสารประกอบ</label>
+                          <input type="file" class="form-control" id="hsPlanBrochure" name="brochure" accept="image/png, image/jpg, image/jpeg" />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">บริษัทประกัน</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="hsPlanInsurerID" name="insurerID" required></select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="mb-3">
+                          <label class="form-label">บันทึกเพิ่มเติม</label>
+                          <textarea class="form-control" placeholder="บันทึกเพิ่มเติม" id="hsPlanNote" name="note" rows="2" value=""></textarea>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" id="hsPlanSubmitButton" name="submitButton" value=""><i class="bi bi-floppy"></i> บันทึก</button>
+        <button type="button" class="btn btn-danger" id="hsPlanResetButton" name="resetButton" onclick="JResetFormButtonReset(this)" value="hsPlanForm"><i class="bi bi-eraser"></i> ล้างข้อมูล </button>
+      </div>
+
+      </form>
+      <!-- Form end -->
+
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ------------------------------------- -->
+<!-- Modal: View HS plan ----------------- -->
+<!-- ------------------------------------- -->
+<div class="modal fade" id="hsPlanViewModal" tabindex="-1" aria-labelledby="hsPlanViewLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="hsPlanViewLabel">แผนประกันสุขภาพ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal body start -->
+      <div class="modal-body">
+        <!-- Card start -->
+        <div class="card">
+          <div class="card-body">
+
+            <div class="text-center mb-4">
+              <h5 class="m-0" id="hsPlanViewTitleName">_Title_</h5>
+              <p class="small opacity-50" id="hsPlanViewTitleDataID">_DataID_</p>
+            </div>
+
+            <div class="border border-dark rounded-1">
+              <table class="table table-striped align-middle custom-table m-0">
+                <tbody>
+                  <tr><td>รหัสย่อ</td> <td><span class="text-primary" id="hsPlanViewCode">_Code_</span></td> </tr>
+                  <tr><td>ชื่อภาษาไทย</td> <td><span class="text-primary" id="hsPlanViewNameTH">_NameTH_</span></li></td> </tr>
+                  <tr><td>ชื่อภาษาอังกฤษ</td> <td><span class="text-primary" id="hsPlanViewNameEN">_NameEN_</span></td> </tr>
+                  <tr><td>ระยะเวลาชำระเบี้ย(ปี)</td> <td><span class="text-primary" id="hsPlanViewPremiumPaymentPeriod">_PremiumPaymentPeriod_</span></td> </tr>
+                  <tr><td>ระยะเวลาคุ้มครอง(ปี)</td> <td><span class="text-primary" id="hsPlanViewProtectionPeriod">_ProtectionPeriod_</span></td> </tr>
+                  <tr><td>รูปแบบประกัน</td> <td><span class="text-primary" id="hsPlanViewContractType">_ContractType_</span></td> </tr>
+                  <tr><td>ประเภทประกัน</td> <td><span class="text-primary" id="hsPlanViewContractGroup">_ContractGroup_</span></td> </tr>
+                  <tr><td>สิทธิ์ลดหย่อนภาษี</td> <td><span class="text-primary" id="hsPlanViewTaxDeduction">_TaxDeduction_</span></td> </tr>
+                  <tr><td>หมวดค่าลดหย่อนภาษี</td> <td><span class="text-primary" id="hsPlanViewTaxDeductionType">_TaxDeductionType_</span></td> </tr>
+                  <tr><td>บริษัทประกัน</td> <td><span class="text-primary" id="hsPlanViewInsurerName">_InsurerName_</span></td> </tr>
+                  <tr><td>บันทึกเพิ่มเติม</td> <td><span class="text-primary" id="hsPlanViewNote">_Note_</span></td> </tr>
+                  <tr><td>โบรชัวร์</td> <td><span class="text-primary" id="hsPlanViewBrochure">_Brochure_</span></td> </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+        <!-- Card end -->
+
+      </div>
+      <!-- Modal body end -->
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ******************************* HS package section ******************************* -->
+
+<!-- Hs package Datatablesstart -->
+<div class="col-12">
+  <div class="card mb-4">
+
+    <!-- Card header start -->
+    <div class="card-header">
+      <div class="d-flex">
+        <h4 class="card-title me-auto">แพ็คเกจประกันสุขภาพ</h4>
+
+        <!-- Button Add start -->
+        <div class="me-2">
+          <button type="button" class="btn btn-outline-primary" onclick="JModalSearchShow(this)" value='hsPackage'><i class="bi bi-search"></i> ค้นหา </button>
+        </div>
+
+        <div class="me-2">
+          <button type="button" class="btn btn-outline-warning" onclick="JGetAllItems(this)" value="hsPackage"><i class="bi bi-book"></i> ข้อมูลทั้งหมด </button>
+        </div>
+
+        <div>
+          <button type="button" class="btn btn-success" onclick="JAddData(this)" value="hsPackage"><i class="bi bi-journal-plus"></i> เพิ่มข้อมูล </button>
+        </div>
+        <!-- Button Add end -->
+
+      </div>
+    </div>
+    <!-- Card header end -->
+
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table align-middle table-hover m-0" id="hsPackageTable"></table>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- Hs package Datatables end -->
+
+
+
+<!-- ------------------------------------ -->
+<!-- Modal: Search HS package ----------- -->
+<!-- ------------------------------------ -->
+<div class="modal fade" id="hsPackageSearchModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="hsPackageSearchModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="hsPackageSearchModalLabel">แพ็คเกจประกันสุขภาพ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <!-- Modal body start -->
+      <div class="modal-body">
+        <!-- Card start -->
+        <div class="card">
+          <div class="card-body">
+
+            <!-- Form start -->
+            <form role="search" id="hsPackageSearchForm" onsubmit="JSearchData(this)">
+              <input type="hidden" id="hsPackageSearch" name="search" value="hsPackage">
+
+              <div class="login-form">
+
+                <div class="row">
+                  <div class="col-xl-12 col-12">
+                    <div class="row">
+
+                      <!-- <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ชื่อไทย</label>
+                          <input type="text" class="form-control" placeholder="ชื่อไทย" id="hsPackageSearchNameTH" name="searchNameTH" />
+                        </div>
+                      </div> -->
+
+                      <!-- <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ชื่ออังกฤษ</label>
+                          <input type="text" class="form-control" placeholder="ชื่ออังกฤษ" id="hsPackageSearchNameEN" name="searchNameEN" />
+                        </div>
+                      </div> -->
+
+                      <div class="col-12">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">แผนประกันสุขภาพ</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="hsPackageSearchPlanID" name="searchPlanID" ></select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">แพ็คเกจประกันสุขภาพ</label>
+                            <!-- อาจจะไม่จำเป็นต้องมี -->
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="hsPackageSearchPackageID" name="searchPackageID" ></select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- <div class="col-6">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">หมวดค่าลดหย่อนภาษี</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="hsPackageSearchTaxDeductionType" name="searchTaxDeductionType" ></select>
+                          </div>
+                        </div>
+                      </div> -->
+
+                      <div class="col-12">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">บริษัทประกัน</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="hsPackageSearchInsurerID" name="searchInsurerID" ></select>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" id="hsPackageSearchSubmitButton" name="submitButton" value=""><i class="bi bi-search"></i> ค้นหา </button>
+        <button type="button" class="btn btn-danger" id="hsPackageSearchResetButton" name="resetButton" onclick="JResetFormButtonReset(this)" value="hsPackageSearchForm"><i class="bi bi-eraser"></i> ล้างข้อมูล </button>
+      </div>
+
+      </form>
+      <!-- Form end -->
+
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ------------------------------------ -->
+<!-- Modal: Create & Update HS package -- -->
+<!-- ------------------------------------ -->
+<div class="modal fade" id="hsPackageModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="hsPackageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="hsPackageModalLabel">แพ็คเกจประกันสุขภาพ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <!-- Modal body start -->
+      <div class="modal-body">
+        <!-- Card start -->
+        <!-- <div class="card"> -->
+        <!-- <div class="card-body"> -->
+
+        <!-- Form start -->
+        <form class="needs-validation" id="hsPackageForm" onsubmit="JFormSubmit(this)" novalidate>
+          <input type="hidden" id="hsPackageFormProcess" name="formProcess" value="hsPackage">
+
+          <div class="login-form">
+
+            <div class="row">
+              <div class="col-xl-12 col-12">
+                <div class="row">
+
+                  <div class="col-6">
+                    <div class="mb-3">
+                      <label class="form-label">ไอดีแผนประกัน</label>
+                      <input type="text" class="form-control" id="hsPackageDataID" name="dataID" value="หมายเลขไอดี(อัตโนมัติ)" readonly />
+                    </div>
+                  </div>
+
+                  <div class="col-6">
+                    <div class="mb-3">
+                      <label class="form-label">แผนประกันสุขภาพ</label>
+                      <select class="form-select" data-placeholder="โปรดเลือก" id="hsPackagePlanID" name="planID" required></select>
+                    </div>
+                  </div>
+
+                  <div class="col-6">
+                    <div class="mb-3">
+                      <label class="form-label">ชื่อแพ็คเกจประกันสุขภาพ</label>
+                      <input type="text" class="form-control" placeholder="ชื่อแพ็คเกจประกันสุขภาพ" id="hsPackagePackageName" name="packageName" required />
+                      <!-- <select class="form-select" data-placeholder="โปรดเลือก" id="hsPackageName" name="packageName" required></select> -->
+                    </div>
+                  </div>
+
+                  <!-- </div>
+                  </div>
+                </div> -->
+
+                  <!-- <div class="row">
+                  <div class="col-xl-12 col-12">
+                    <div class="row"> -->
+                  <!-- Card 2 start -->
+                  <!-- <div class="row"> -->
+                  <div class="col-12">
+                    <!-- Card start -->
+                    <div class="card mb-3">
+                      <!-- Card header start -->
+                      <div class="card-header">
+                        <h6 class="card-title me-auto">รายละเอียดความคุ้มครอง</h6>
+                      </div>
+                      <!-- Card header end -->
+
+                      <!-- Card body start -->
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-xl-12 col-12">
+                            <div class="row">
+
+                              <!-- <div class="col-12"> -->
+                              <!-- Input form start -->
+                              <div class="table-responsive">
+                                <table id="hsPackageTable" class="table align-middle table-hover m-0 ">
+                                  <thead>
+                                    <tr class="col-12">
+                                      <th class="col-2">ลำดับ</th>
+                                      <th class="col-7">รายการ</th>
+                                      <th class="col-3">วงเงิน</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                  </tbody>
+                                </table>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                    <!-- Card end -->
+                  </div>
+                  <!-- </div> -->
+                  <!-- Card 2 end -->
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- </form> -->
+          <!-- Form end -->
+          <!-- </div> -->
+          <!-- </div> -->
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" id="hsPackageSubmitButton" name="submitButton" value=""><i class="bi bi-floppy"></i> บันทึก</button>
+        <button type="button" class="btn btn-danger" id="้hsPackageResetButton" name="resetButton" onclick="JResetFormButtonReset(this)" value="hsPackageForm"><i class="bi bi-eraser"></i> ล้างข้อมูล </button>
+      </div>
+
+      </form>
+      <!-- Form end -->
+
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ------------------------------------- -->
+<!-- Modal: View HS package -------------- -->
+<!-- ------------------------------------- -->
+<div class="modal fade" id="hsPackageViewModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="hsPackageViewLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="hsPackageViewLabel">ประกันสุขภาพ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal body start -->
+      <div class="modal-body">
+        <!-- Card start -->
+        <div class="card">
+          <div class="card-body">
+
+            <div class="text-center mb-4">
+              <!-- <p id="hsPackageViewPreviewProfilePicture"></p> -->
+              <h5 class="m-0" id="hsPackageViewTitleName">_Title_</h5>
+              <p class="small opacity-50" id="hsPackageViewTitleDataID">_DataID_</p>
+            </div>
+
+            <div class="mb-4">
+              <h5>รายละเอียด</h5>
+              <ul class="list-unstyled d-flex flex-column gap-1">
+                <!-- <li>ไอดีสัญญา: <span class="text-primary" id="hsPackageViewDataID">_DataID_</span></li> -->
+                <li>รหัสย่อ: <span class="text-primary" id="hsPackageViewCode">_Code_</span></li>
+                <li>ชื่อภาษาไทย: <span class="text-primary" id="hsPackageViewNameTH">_NameTH_</span></li>
+                <li>ชื่อภาษาอังกฤษ: <span class="text-primary" id="hsPackageViewNameEN">_NameEN_</span></li>
+                <li>ระยะเวลาชำระเบี้ย(ปี):
+                  <span class="text-primary" id="hsPackageViewPremiumPaymentPeriod">_PremiumPaymentPeriod_</span>
+                </li>
+                <li>ระยะเวลาคุ้มครอง(ปี):
+                  <span class="text-primary" id="hsPackageViewProtectionPeriod">_ProtectionPeriod_</span>
+                </li>
+                <li>รูปแบบประกัน: <span class="text-primary" id="hsPackageViewContractType">_ContractType_</span></li>
+                <li>ประเภทประกัน: <span class="text-primary" id="hsPackageViewContractGroup">_ContractGroup_</span></li>
+                <li>สิทธิ์ลดหย่อนภาษี: <span class="text-primary" id="hsPackageViewTaxDeduction">_TaxDeduction_</span>
+                </li>
+                <li>หมวดค่าลดหย่อนภาษี:
+                  <span class="text-primary" id="hsPackageViewTaxDeductionType">_TaxDeductionType_</span>
+                </li>
+                <li>บริษัทประกัน: <span class="text-primary" id="hsPackageViewInsurerName">_InsurerName_</span></li>
+                <li>บันทึกเพิ่มเติม: <span class="text-primary" id="hsPackageViewNote">_Note_</span></li>
+                <li>โบรชัวร์: <span class="text-primary" id="hsPackageViewBrochure">_Brochure_</span></li>
+              </ul>
+            </div>
+
+            <div class="d-flex">
+              <div class="ms-auto">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Close</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- Card end -->
+
+      </div>
+      <!-- Modal body end -->
+    </div>
+  </div>
+</div>

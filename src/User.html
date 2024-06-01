@@ -1,0 +1,300 @@
+<!-- Main Datatables start -->
+<div class="col-12">
+  <div class="card mb-4">
+
+    <!-- Card header start -->
+    <div class="card-header">
+      <div class="d-flex">
+        <h4 class="card-title me-auto">บัญชีผู้ใช้</h4>
+
+        <!-- Button Add start -->
+        <div class="me-2">
+          <button type="button" class="btn btn-outline-primary" onclick="JModalSearchShow(this)" value='user'><i class="bi bi-search"></i> ค้นหา </button>
+        </div>
+
+        <div class="me-2">
+          <button type="button" class="btn btn-outline-warning" onclick="JGetAllItems(this)" value="user"><i class="bi bi-book"></i> ข้อมูลทั้งหมด </button>
+        </div>
+
+        <div>
+          <button type="button" class="btn btn-success" onclick="JAddData(this)" value="user"><i class="bi bi-person-add"></i> เพิ่มข้อมูล </button>
+        </div>
+        <!-- Button Add end -->
+
+      </div>
+    </div>
+    <!-- Card header end -->
+
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table align-middle table-hover m-0" id="usersTable"></table>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- Main Datatables end -->
+
+
+
+<!-- ------------------------------------ -->
+<!-- MODAL: Search User ----------------- -->
+<!-- ------------------------------------ -->
+<div class="modal fade" id="userSearchModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="userSearchModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="userSearchModalLabel">บัญชีผู้ใช้</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <!-- Modal body start -->
+      <div class="modal-body">
+        <!-- Card start -->
+        <div class="card">
+          <div class="card-body">
+
+            <!-- Form start -->
+            <form role="search" id="userSearchForm" onsubmit="JSearchData(this)">
+              <input type="hidden" id="userSearch" name="search" value="user">
+
+              <div class="login-form">
+
+                <div class="row">
+                  <div class="col-xl-12 col-12">
+                    <div class="row">
+
+                      <div class="col-12">
+                        <div class="mb-3">
+                          <label class="form-label">ชื่อบัญชี</label>
+                          <input type="text" class="form-control" placeholder="ชื่อบัญชี" id="userSearchUsername" name="searchUsername" />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ชื่อ</label>
+                          <input type="text" class="form-control" placeholder="ชื่อ" id="userSearchFirstname" name="searchFirstname" />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">นามสกุล</label>
+                          <input type="text" class="form-control" placeholder="นามสกุล" id="userSearchLastname" name="searchLastname" />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">ระดับสิทธิ์</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="userSearchLevel" name="searchLevel" ></select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">สถานะบัญชี</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="userSearchStatus" name="searchStatus" ></select>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" id="userSearchSubmitButton" name="submitButton" value=""><i class="bi bi-search"></i> ค้นหา </button>
+        <button type="button" class="btn btn-danger" id="userSearchResetButton" name="resetButton" onclick="JResetFormButtonReset(this)" value="userSearchForm"><i class="bi bi-eraser"></i> ล้างข้อมูล </button>
+        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> ปิด</button> -->
+      </div>
+
+      </form>
+      <!-- Form end -->
+
+    </div>
+  </div>
+</div>
+
+
+
+<!-- --------------------------- -->
+<!-- MODAL: CREATE & UPDATE USER -->
+<!-- --------------------------- -->
+<div class="modal fade" id="userModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="userModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="userModalLabel">บัญชีผู้ใช้</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <!-- Modal body start -->
+      <div class="modal-body">
+        <!-- Card start -->
+        <div class="card">
+          <div class="card-body">
+
+            <div class="text-center mb-2">
+              <p id="userProfilePicture"></p>
+            </div>
+
+            <!-- Form start -->
+            <form class="needs-validation" id="userForm" onsubmit="JFormSubmit(this)" novalidate>
+              <input type="hidden" id="userFormProcess" name="formProcess" value="user">
+              <div class="login-form">
+
+                <div class="row">
+                  <div class="col-xl-12 col-12">
+                    <div class="row">
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ไอดี</label>
+                          <input type="text" class="form-control" id="userDataID" name="dataID" value="หมายเลขไอดี(อัตโนมัติ)" readonly />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ชื่อบัญชี</label>
+                          <input type="text" class="form-control" placeholder="ชื่อบัญชี" id="userUsername" name="username" value="username" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ชื่อ</label>
+                          <input type="text" class="form-control" placeholder="ชื่อ" id="userFirstname" name="firstname" value="firstname" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">นามสกุล</label>
+                          <input type="text" class="form-control" placeholder="นามสกุล" id="userLastname" name="lastname" value="lastname" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">อีเมล</label>
+                          <input type="email" class="form-control" placeholder="อีเมล" id="userEmail" name="email" value="email@mail.com" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">รูปโปรไฟล์</label>
+                          <input type="file" class="form-control" id="userProfilePicture" name="profilePicture" accept="image/png, image/jpg, image/jpeg" />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">ระดับสิทธิ์</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="userLevel" name="level" required></select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">สถานะบัญชี</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="userStatus" name="status" required></select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" id="userSubmitButton" name="submitButton" value=""><i class="bi bi-floppy"></i> บันทึก</button>
+        <button type="button" class="btn btn-danger" id="userResetButton" name="resetButton" onclick="JResetFormButtonReset(this)" value="userForm"><i class="bi bi-eraser"></i> ล้างข้อมูล </button>
+      </div>
+
+      </form>
+      <!-- Form end -->
+
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ---------------------------- -->
+<!-- MODAL: VIEW INFORMATION USER -->
+<!-- ---------------------------- -->
+<div class="modal fade" id="userViewModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="userViewLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="userViewLabel">บัญชีผู้ใช้</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal body start -->
+      <div class="modal-body">
+        <!-- Card start -->
+        <div class="card">
+          <div class="card-body">
+
+            <div class="text-center mb-4">
+              <p id="userViewPreviewProfilePicture"></p>
+              <h5 class="m-0" id="userViewFullname">_Fullname_</h5>
+              <p class="small opacity-50" id="userViewUserID">_User_ID_</p>
+            </div>
+
+            <div class="mb-4">
+              <h5>ข้อมูล</h5>
+              <ul class="list-unstyled d-flex flex-column gap-1">
+                <li>ชื่อบัญชี: <span class="text-primary" id="userViewUsername">_Username_</span></li>
+                <li>ชื่อ-นามสกุล: <span class="text-primary" id="userViewName">_Name_</span></li>
+                <li>อีเมล: <span class="text-primary" id="userViewEmail">_E-mail_</span></li>
+                <li>ระดับสิทธิ์: <span class="text-primary" id="userViewLevel">_Level_</span></li>
+                <li>สถานะบัญชี: <span class="text-primary" id="userViewStatus">_Status_</span></li>
+              </ul>
+            </div>
+
+            <!-- <div class="d-flex">
+              <div class="ms-auto">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Close</button>
+              </div>
+            </div> -->
+
+          </div>
+        </div>
+        <!-- Card end -->
+
+      </div>
+      <!-- Modal body end -->
+
+      <!-- <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> ปิด</button>
+      </div> -->
+
+    </div>
+  </div>
+</div>

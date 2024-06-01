@@ -1,0 +1,207 @@
+<script>
+  
+// **************************************************** //
+// เพิ่มข้อมูล
+// **************************************************** //
+  function JAddDataUser() {
+    // JModalShow(MODAL_USER) // แสดงโมดัล
+
+    // กำหนดค่าเริ่มต้นฟอร์ม
+    // JResetForm(FORM_USER)
+    document.getElementById('userDataID').readOnly = true
+    document.getElementById('userUsername').readOnly = false
+    document.getElementById('userProfilePicture').innerHTML = ''
+    document.getElementById('userSubmitButton').value = MODE_ADD
+  }
+
+
+
+// **************************************************** //
+// ตรวจสอบข้อมูล
+// **************************************************** //
+  function JValidateFormUser(_formObj) {
+    // เตรียมข้อมูลเพื่อตรวจสอบ
+    const dataObj = [
+      _formObj.username.value.trim(),
+      _formObj.firstname.value.trim(),
+      _formObj.lastname.value.trim(),
+      _formObj.email.value.trim(),
+      _formObj.level.value,
+      _formObj.status.value
+    ]
+    
+    // ตรวจสอบข้อมูล
+    if (JHasEmptyData(dataObj)) { // ข้อมูลไม่ถูกต้อง
+      SWAInfo(MSG_INPUT_FORM_ERROR) // แจ้งเตือนข้อผิดพลาด
+    } else { // ข้อมูลถูกต้อง
+      // JModalHide(MODAL_USER) // ซ่อนโมดัล
+      SWALoading() // แสดงแถบโหลด
+      JSaveData(_formObj) // บันทึกข้อมูล
+    }
+  }
+
+
+
+// **************************************************** //
+// ดูข้อมูล
+// **************************************************** //
+  function JViewDataUser(_data) {
+    // กำหนดค่าใหม่ให้ฟอร์ม
+    const fullname = _data.Firstname + ' ' + _data.Lastname
+    const status = (_data.Status === 'ENABLE') ? 'เปิดการใช้งาน' : 'ปิดการใช้งาน'
+    const elementObj = [
+      { type: SET_INNERHTML, id: 'userViewPreviewProfilePicture', value: '<img src="' + _data.ImageLH5 + '" class="img-fluid rounded-circle mb-2 img-5x" />'},
+      { type: SET_INNERHTML, id: 'userViewFullname', value: fullname},
+      { type: SET_INNERHTML, id: 'userViewUserID', value: _data.UserID},
+      { type: SET_INNERHTML, id: 'userViewUsername', value: _data.Username},
+      { type: SET_INNERHTML, id: 'userViewName', value: fullname},
+      { type: SET_INNERHTML, id: 'userViewEmail', value: _data.Email},
+      { type: SET_INNERHTML, id: 'userViewLevel', value: _data.Level},
+      { type: SET_INNERHTML, id: 'userViewStatus', value: status}
+    ]
+    JSetDataForm(elementObj) // กำหนดค่าฟอร์ม
+  }
+
+
+
+// **************************************************** //
+// แก้ไขข้อมูล
+// **************************************************** //
+  function JEditDataUser(_data) {
+    // รีเซ็ทฟอร์ม และ กำหนดค่าใหม่ให้ฟอร์ม
+    JResetForm(FORM_USER)
+    const elementObj = [
+      { type: SET_INNERHTML, id: 'userProfilePicture', value: '<img src="' + _data.ImageLH5 + '" class="img-fluid rounded-circle mb-2 img-3x" />'},
+      { type: SET_VALUE, id: 'userDataID', value: _data.UserID},
+      { type: SET_ATTRIBUTE_READONLY, id: 'userDataID', value: true},
+      { type: SET_VALUE, id: 'userUsername', value: _data.Username},
+      { type: SET_ATTRIBUTE_READONLY, id: 'userUsername', value: true},
+      { type: SET_VALUE, id: 'userFirstname', value: _data.Firstname},
+      { type: SET_VALUE, id: 'userLastname', value: _data.Lastname},
+      { type: SET_VALUE, id: 'userEmail', value: _data.Email},
+      { type: SET_VALUE_SELECT2, id: 'userLevel', value: _data.Level},
+      { type: SET_VALUE_SELECT2, id: 'userStatus', value: _data.Status},
+      { type: SET_VALUE, id: 'userSubmitButton', value: MODE_EDIT}
+    ]
+    JSetDataForm(elementObj) // กำหนดค่าฟอร์ม
+  }
+
+
+
+// **************************************************** //
+// รีเซ็ทรหัสผ่าน
+// **************************************************** //
+  function JResetPassword(_element) {
+    // แจ้งเตือนเพื่อยืนยัน
+    Swal.fire({
+      title: 'คุณต้องการรีเซ็ทรหัสผ่าน ใช่หรือไม่ ?',
+      // text: 'รหัสผ่านจะถูกกำหนดเป็นค่าเริ่มต้น',
+      icon: 'warning',
+      // confirmButtonText: 'ยืนยัน',
+      // confirmButtonColor: '#d33',
+      showCancelButton: true,
+      // cancelButtonText: 'ยกเลิก',
+    }).then((result) => {
+      if (result.isConfirmed) { // ยืนยันคำสั่ง
+        SWALoading() // เปิดแถบโหลด
+        
+        // อินพุต
+        const element = _element.value
+        const elementArr = element.split(':')
+        const getModule = elementArr[0]
+        const getDataID = elementArr[1]
+        const running = JRunningModule(getModule)
+        const sheetName = running.sheetName
+
+        // เตรียมข้อมูลส่งให้ gas
+        const dataObj = {
+          sheetName: sheetName,
+          dataID: getDataID
+        }
+
+        // แก้ไขข้อมูลในชีท
+        google.script.run.withSuccessHandler(function(_responseJson) {
+          // แปลงข้อมูล json เป็นอ็อบเจ็ค
+          const response = JSON.parse(_responseJson)
+          const state = response.state
+          const message = response.message
+
+          // ตรวจสอบการบันทึกข้อมูล
+          if (state) { // สำเร็จ
+            SWASuccess(message) // แจ้งเตือนสำเร็จ
+          } else { // ล้มเหลว
+            SWAError(message) // แจ้งเตือนข้อผิดพลาด
+          }
+        }).ResetPassword(JSON.stringify(dataObj))
+      }
+    })
+  }
+
+
+
+// **************************************************** //
+// แสดงข้อมูลบน Datatables
+// **************************************************** //
+  function JDataTableUser(_data) {
+    // แปลงข้อมูล json เป็นอ็อบเจ็ค
+    // const data = JSON.parse(_jsonData)
+    const state = _data.state
+    const items = _data.values
+
+    // ตรวจสอบสถานะข้อมูล
+    if (state) {
+      $(document).ready(function() {
+        $('#usersTable').DataTable({
+          destroy: true,
+          responsive: true,
+          data: items,
+          colReorder: true,
+          lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "ทั้งหมด"]],
+          order: [[0, "desc"]], 
+          sPaginationType: "full_numbers",
+          columns: [
+            { title: "ID" },
+            { title: "PHOTO",
+              render: function(data, type, row, meta) {
+                return '<img src="' + data + '" class="img-fluid rounded-circle mb-2 img-3x" />'
+            }},
+            { title: "USERNAME" },
+            { title: "FIRSTNAME" },
+            { title: "LASTNAME" },
+            { title: "LEVEL" },
+            { title: "STATUS",
+              render: function(data, type, row, meta) {
+                return data === 'ENABLE' ? '<span class="badge rounded-pill bg-success">เปิดการใช้งาน</span>' : '<span class="badge rounded-pill bg-danger">ปิดการใช้งาน</span>'
+            }},
+            { title: "ACTIONS",
+              render: function(data, type, row, meta) {
+                return '<div class="d-inline-flex gap-2">' +
+                  '<button type="button" class="btn btn-success" onclick="JViewData(this)" value="' + MODULE_USER  + ':' + row[0] + '"><i class="bi bi-eye"></i></button>' +
+								  '<button type="button" class="btn btn-primary" onclick="JEditData(this)" value="' + MODULE_USER  + ':' + row[0] + '"><i class="bi bi-pencil"></i></button>' +
+                  '<button type="button" class="btn btn-warning" onclick="JResetPassword(this)" value="' + MODULE_USER  + ':' + row[0] + '"><i class="bi bi-arrow-clockwise"></i></button>' +
+								  '<button type="button" class="btn btn-danger" onclick="JDeleteData(this)" value="' + MODULE_USER  + ':' + row[0] + '"><i class="bi bi-trash3"></i></button>' +
+                  '</div>'             
+            }}
+          ],
+          language: {
+            sProcessing: "กำลังดำเนินการ...",
+            sLengthMenu: "แสดง _MENU_ แถว",
+            sZeroRecords: "ไม่พบข้อมูล",
+            sInfo: "แสดง _START_ ถึง _END_ จาก _TOTAL_ แถว",
+            sInfoEmpty: "แสดง 0 ถึง 0 จาก 0 แถว",
+            sInfoFiltered: "(กรองข้อมูล _MAX_ ทุกแถว)",
+            sInfoPostFix: "",
+            sSearch: "ค้นหา:",
+            sUrl: "",
+            oPaginate: {
+              sFirst: "<< หน้าแรก",
+              sPrevious: "< ก่อนหน้า",
+              sNext: "ถัดไป >",
+              sLast: "หน้าสุดท้าย >>"
+            }
+          },
+        })
+      })
+    }
+  }
+</script>

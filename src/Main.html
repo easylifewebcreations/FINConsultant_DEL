@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>FIN Consultant 2024</title>
+
+  <!-- Meta -->
+  <!-- <meta name="description" content="Marketplace for Bootstrap Admin Dashboards" /> -->
+  <!-- <meta name="author" content="Bootstrap Gallery" /> -->
+  <!-- <link rel="canonical" href="https://www.bootstrap.gallery/"> -->
+  <!-- <meta property="og:url" content="https://www.bootstrap.gallery"> -->
+  <!-- <meta property="og:title" content="Admin Templates - Dashboard Templates | Bootstrap Gallery"> -->
+  <!-- <meta property="og:description" content="Marketplace for Bootstrap Admin Dashboards"> -->
+  <!-- <meta property="og:type" content="Website"> -->
+  <!-- <meta property="og:site_name" content="Bootstrap Gallery"> -->
+  <!-- <link rel="shortcut icon" href="assets/images/favicon.svg" /> -->
+
+  <!-- ========================================== -->
+  <!-- JQuery -->
+  <!-- Source: https://www.jsdelivr.com/package/npm/jquery -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+
+  <!-- ========================================== -->
+  <!-- DataTables -->
+  <link href="https://cdn.datatables.net/v/dt/dt-2.0.3/datatables.min.css" rel="stylesheet">
+  <script src="https://cdn.datatables.net/v/dt/dt-2.0.3/datatables.min.js"></script>
+
+  <!-- ========================================== -->
+  <!-- DataTables JQuery3 Bootstrap5 -->
+  <!-- Source: https://datatables.net/download/index -->
+  <!-- <link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.0.3/datatables.min.css" rel="stylesheet">
+  <script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.0.3/datatables.min.js"></script> -->
+
+  <!-- ========================================== -->
+  <!-- Bootstrap -->
+  <!-- Source: https://www.jsdelivr.com/package/npm/bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+
+  <!-- ========================================== -->
+  <!-- Select2 -->
+  <!-- Source: https://select2.org/getting-started/installation -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+  <!-- ========================================== -->
+  <!-- Select2 Bootstrap 5 Theme -->
+  <!-- Source: https://apalfrey.github.io/select2-bootstrap-5-theme/ -->
+  <!-- Styles -->
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" /> -->
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" /> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+  <!-- Or for RTL support -->
+  <!-- <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" /> -->
+  <!-- Scripts -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+  <!-- ========================================== -->
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- ========================================== -->
+  <!-- ICON: bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <!-- ========================================== -->
+  <!-- Overlay Scrollbars -->
+  <!-- Source: https://www.jsdelivr.com/package/npm/overlayscrollbars?version=1.13.0 -->
+  <link href="https://cdn.jsdelivr.net/npm/overlayscrollbars@1.13.0/css/OverlayScrollbars.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@1.13.0/js/OverlayScrollbars.min.js"></script>
+  <?!= ('Main_scrollbar_custom_js') ?>
+
+  <!-- ========================================== -->
+  <!-- Toastify -->
+  <!-- Source: https://www.jsdelivr.com/package/npm/toastify-js -->
+  <link href="https://cdn.jsdelivr.net/npm/toastify-js@1.12.0/src/toastify.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js@1.12.0/src/toastify.min.js"></script>
+
+  <!-- ========================================== -->
+  <!-- Style sheet -->
+  <?!= Include('Main_css') ?>
+  <!-- ========================================== -->
+
+</head>
+
+<body>
+
+  <!-- ========================================== -->
+  <!-- App url -->
+  <a href="<?= GetUrl() ?>" id="appUrl" style="display:none"></a>
+
+  <!-- ========================================== -->
+  <!-- Page wrapper start -->
+  <div class="page-wrapper">
+
+    <!-- ========================================== -->
+    <!-- Main container start -->
+    <div class="main-container">
+
+      <!-- ========================================== -->
+      <!-- Sidebar wrapper start -->
+      <nav id="sidebar" class="sidebar-wrapper">
+        <?!= Include('Project_Sidebar') ?>
+      </nav>
+      <!-- Sidebar wrapper end -->
+      <!-- ========================================== -->
+
+      <!-- ========================================== -->
+      <!-- App container starts -->
+      <div class="app-container">
+
+        <!-- ========================================== -->
+        <!-- App header starts -->
+        <div class="app-header d-flex align-items-center">
+          <?!= Include('Project_Header') ?>
+        </div>
+        <!-- App header ends -->
+        <!-- ========================================== -->
+
+        <!-- ========================================== -->
+        <!-- App body starts -->
+        <div class="app-body">
+
+          <!-- ========================================== -->
+          <!-- Container starts -->
+          <div class="container-fluid">
+            <!-- Row start -->
+            <div class="row">
+
+              <!-- Pages start -->
+              <div class="page-content" id="pageDashboard" style="display:none">
+                <?!= Include('Dashboard') ?>
+              </div>
+
+              <div class="page-content" id="pagePolicy" style="display:none">
+                <?!= Include('Policy') ?>
+              </div>
+
+              <div class="page-content" id="pageCustomer" style="display:none">
+                <?!= Include('Customer') ?>
+              </div>
+
+              <div class="page-content" id="pageUser" style="display:none">
+                <?!= Include('User') ?>
+              </div>
+
+              <div class="page-content" id="pageMainContract" style="display:none">
+                <?!= Include('MainContract') ?>
+              </div>
+
+              <!-- <div class="page-content" id="pageRiderContract" style="display:none">
+                <Include('RiderContract') ?>
+              </div> -->
+
+              <div class="page-content" id="pageHsPlan" style="display:block">
+                <?!= Include('HsPlan') ?>
+              </div>
+
+              <div class="page-content" id="pageCiPlan" style="display:none">
+                <!-- <Include('CiPlan') ?> -->
+              </div>
+
+              <div class="page-content" id="pageAiPlan" style="display:none">
+                <!-- <Include('AiPlan') ?> -->
+              </div>
+
+              <div class="page-content" id="pageHbPlan" style="display:none">
+                <!-- <Include('HbPlan') ?> -->
+              </div>
+
+              <div class="page-content" id="pageWpPlan" style="display:none">
+                <!-- <Include('WpPlan') ?> -->
+              </div>
+              <!-- Pages end -->
+
+            </div>
+            <!-- Row end -->
+          </div>
+          <!-- Container ends -->
+          <!-- ========================================== -->
+
+          <!-- ========================================== -->
+          <!-- Modal starts -->
+          <div class="container-fluid">
+            <!-- Row start -->
+            <div class="row">
+              <!-- Modal start -->
+              <div>
+                <?!= Include('PasswordManagement') ?>
+                <?!= Include('License') ?>
+                <!-- <Include('RiderPlan') ?> -->
+              </div>
+              <!-- Modal end -->
+            </div>
+            <!-- Row end -->
+          </div>
+          <!-- Modal ends -->
+          <!-- ========================================== -->
+
+        </div>
+        <!-- App body ends -->
+        <!-- ========================================== -->
+
+        <!-- ========================================== -->
+        <!-- App footer start -->
+        <div class="app-footer">
+          <span>© Bootstrap Gallery 2023</span>
+        </div>
+        <!-- App footer end -->
+        <!-- ========================================== -->
+
+      </div>
+      <!-- App container ends -->
+      <!-- ========================================== -->
+
+    </div>
+    <!-- Main container end -->
+    <!-- ========================================== -->
+
+  </div>
+  <!-- Page wrapper end -->
+  <!-- ========================================== -->
+
+  <!-- ========================================== -->
+  <!-- JavaScript custom files -->
+  <!-- Project part -->
+  <?!= Include('Main_sidebar_js') ?>
+  <?!= Include('Main_js') ?>
+  <?!= Include('Project_js') ?>
+  <?!= Include('Project_js_CRUD') ?>
+  <?!= Include('Project_js_SelectElement') ?>
+  <?!= Include('Project_js_SweerAlert') ?>
+  <?!= Include('Project_js_ValidateForm') ?>
+  <!-- Account profile part -->
+  <?!= Include('License_js') ?>
+  <?!= Include('PasswordManagement_js') ?>
+  <!-- Menu part -->
+  <?!= Include('Policy_js') ?>
+  <?!= Include('Customer_js') ?>
+  <?!= Include('User_js') ?>
+  <?!= Include('MainContract_js') ?>
+  <!-- <Include('RiderPlan_js') ?> -->
+  <?!= Include('HsPlan_js') ?>
+  <!-- <Include('RiderContract_js') ?> -->
+  <!-- End of JavaScript customer files -->
+  <!-- ========================================== -->
+
+</body>
+
+</html>

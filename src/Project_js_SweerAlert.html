@@ -1,0 +1,80 @@
+<script>
+  // ตัวแปรคงที่
+  const SWAL_MSG_LOADING = 'กรุณารอสักครู่'
+  const SWAL_ICON = {
+    info:'info',
+    success:'success',
+    error:'error'
+  }
+  const SWAL_TIMER = 1000
+
+  /**
+ * คำนวณพื้นที่ของวงกลมจากรัศมีที่กำหนด
+ *
+ * @param {number} radius - รัศมีของวงกลม
+ * @returns {number} - พื้นที่ของวงกลม
+ * @throws {Error} - หากรัศมีน้อยกว่าหรือเท่ากับศูนย์
+ * @example
+ * // คำนวณพื้นที่ของวงกลมที่มีรัศมี 5
+ * const area = calculateCircleArea(5);
+ * console.log(area); // 78.53981633974483
+ */
+function calculateCircleArea(radius) {
+    if (radius <= 0) {
+        throw new Error('Radius must be greater than zero');
+    }
+    return Math.PI * radius * radius;
+}
+
+
+  // รอระบบทำงาน
+  function SWALoading() {
+    Swal.fire({
+      title: SWAL_MSG_LOADING,
+      allowEscapeKey: false,
+      allowOutsideClick: false
+    })
+    Swal.showLoading()
+  }
+
+  // แสดงข้อความ
+  function SWAInfo(_title) {
+    Swal.fire({
+      title: _title,
+      icon: SWAL_ICON.info,
+      allowEscapeKey: false,
+      allowOutsideClick: false
+    })
+  }
+
+
+  function SWAError(_title) {
+    Swal.fire({
+      title: _title,
+      icon: SWAL_ICON.error,
+      allowEscapeKey: false,
+      allowOutsideClick: false
+    })    
+  }
+  
+  function SWASuccess(_title) {
+    Swal.fire({
+      title: _title,
+      icon: SWAL_ICON.success,
+      timer: SWAL_TIMER,
+      showConfirmButton: false,
+      allowEscapeKey: false,
+      allowOutsideClick: false
+    })
+  }
+
+  // function SWAAlert(_icon, _title){
+  //   Swal.fire({
+  //     title: _title,
+  //     icon: _icon,
+  //     allowEscapeKey: false,
+  //     allowOutsideClick: false
+  //   })
+  // }
+
+</script>

@@ -1,0 +1,244 @@
+<!-- ------------------------------------ -->
+<!-- MODAL: CREATE & UPDATE Main contract -->
+<!-- ------------------------------------ -->
+<div class="modal fade" id="riderPlanModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="riderPlanModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="riderPlanModalLabel">สัญญาหลัก/อนุสัญญา</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <!-- Modal body start -->
+      <div class="modal-body">
+        <!-- Card start -->
+        <div class="card">
+          <div class="card-body">
+
+            <!-- Form start -->
+            <form class="needs-validation" id="riderPlanForm" onsubmit="JFormSubmit(this)" novalidate>
+              <input type="hidden" id="riderPlanFormProcess" name="formProcess" value="riderPlan">
+
+              <div class="login-form">
+
+                <div class="row">
+                  <div class="col-xl-12 col-12">
+                    <div class="row">
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ไอดีสัญญา</label>
+                          <input type="text" class="form-control" id="riderPlanDataID" name="dataID" value="หมายเลขไอดี(อัตโนมัติ)" readonly />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ชื่อย่อ/รหัสย่อ</label>
+                          <input type="text" class="form-control" placeholder="ชื่อย่อ/รหัสย่อ" id="riderPlanCode" name="code" value="รหัสย่อ" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ชื่อภาษาไทย</label>
+                          <input type="text" class="form-control" placeholder="ชื่อภาษาไทย" id="riderPlanNameTH" name="nameTH" value="ชื่อภาษาไทย" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ชื่อภาษาอังกฤษ</label>
+                          <input type="text" class="form-control" placeholder="ชื่อภาษาอังกฤษ" id="riderPlanNameEN" name="nameEN" value="english name" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ระยะเวลาชำระเบี้ย(ปี)</label>
+                          <input type="number" min="1" class="form-control" placeholder="ระยะเวลาชำระเบี้ย" id="riderPlanPremiumPaymentPeriod" name="premiumPaymentPeriod" value="1" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ประเภทระยะเวลาชำระเบี้ย</label>
+                          <div class="mt-2">
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="riderPlanPremiumPaymentPeriodTypeQuantity" name="premiumPaymentPeriodType" value="จำนวน" checked />
+                              <label class="form-check-label" for="inlineRadio1">จำนวนปี</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="riderPlanPremiumPaymentPeriodTypeUntil" name="premiumPaymentPeriodType" value="ถึงอายุ" />
+                              <label class="form-check-label" for="inlineRadio2">ถึงอายุ</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ระยะเวลาคุ้มครอง(ปี)</label>
+                          <input type="number" min="1" class="form-control" placeholder="ระยะเวลาคุ้มครอง" id="riderPlanProtectionPeriod" name="protectionPeriod" value="1" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ประเภทระยะเวลาคุ้มครอง</label>
+                          <div class="mt-2">
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="riderPlanProtectionPeriodTypeQuantity" name="protectionPeriodType" value="จำนวน" checked />
+                              <label class="form-check-label" for="inlineRadio1">จำนวนปี</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" id="riderPlanProtectionPeriodTypeUntil" name="protectionPeriodType" value="ถึงอายุ" />
+                              <label class="form-check-label" for="inlineRadio2">ถึงอายุ</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">รูปแบบประกัน</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="riderPlanContractType" name="contractType" required></select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">ประเภทประกัน</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="riderPlanContractGroup" name="contractGroup" required></select>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">สิทธิ์ลดหย่อนภาษี</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="riderPlanTaxDeduction" name="taxDeduction" required></select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">หมวดค่าลดหย่อนภาษี</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="riderPlanTaxDeductionType" name="taxDeductionType" required></select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">โบรชัวร์/เอกสารประกอบ</label>
+                          <input type="file" class="form-control" id="riderPlanBrochure" name="brochure" accept="image/png, image/jpg, image/jpeg" />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">บริษัทประกัน</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="riderPlanInsurerID" name="insurerID" required></select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="mb-3">
+                          <label class="form-label">บันทึกเพิ่มเติม</label>
+                          <textarea class="form-control" placeholder="บันทึกเพิ่มเติม" id="riderPlanNote" name="note" rows="2"></textarea>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex">
+                  <div class="ms-auto">
+                    <button type="submit" class="btn btn-primary" id="riderPlanSubmitButton" name="submitButton" value=""><i class="bi bi-floppy"></i> บันทึก</button>
+                    <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Close</button> -->
+                  </div>
+                </div>
+
+              </div>
+
+            </form>
+            <!-- Form end -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ------------------------------------- -->
+<!-- MODAL: VIEW INFORMATION Main contract -->
+<!-- ------------------------------------- -->
+<div class="modal fade" id="riderPlanViewModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="riderPlanViewLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="riderPlanViewLabel">สัญญาหลัก/อนุสัญญา</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal body start -->
+      <div class="modal-body">
+        <!-- Card start -->
+        <div class="card">
+          <div class="card-body">
+
+            <div class="text-center mb-4">
+              <!-- <p id="riderPlanViewPreviewProfilePicture"></p> -->
+              <h5 class="m-0" id="riderPlanViewTitleName">_Title_</h5>
+              <p class="small opacity-50" id="riderPlanViewTitleDataID">_DataID_</p>
+            </div>
+
+            <div class="mb-4">
+              <h5>รายละเอียด</h5>
+              <ul class="list-unstyled d-flex flex-column gap-1">
+                <!-- <li>ไอดีสัญญา: <span class="text-primary" id="riderPlanViewDataID">_DataID_</span></li> -->
+                <li>รหัสย่อ: <span class="text-primary" id="riderPlanViewCode">_Code_</span></li>
+                <li>ชื่อภาษาไทย: <span class="text-primary" id="riderPlanViewNameTH">_NameTH_</span></li>
+                <li>ชื่อภาษาอังกฤษ: <span class="text-primary" id="riderPlanViewNameEN">_NameEN_</span></li>
+                <li>ระยะเวลาชำระเบี้ย(ปี): <span class="text-primary" id="riderPlanViewPremiumPaymentPeriod">_PremiumPaymentPeriod_</span></li>
+                <li>ระยะเวลาคุ้มครอง(ปี): <span class="text-primary" id="riderPlanViewProtectionPeriod">_ProtectionPeriod_</span></li>
+                <li>รูปแบบประกัน: <span class="text-primary" id="riderPlanViewContractType">_ContractType_</span></li>
+                <li>ประเภทประกัน: <span class="text-primary" id="riderPlanViewContractGroup">_ContractGroup_</span></li>
+                <li>สิทธิ์ลดหย่อนภาษี: <span class="text-primary" id="riderPlanViewTaxDeduction">_TaxDeduction_</span></li>
+                <li>หมวดค่าลดหย่อนภาษี: <span class="text-primary" id="riderPlanViewTaxDeductionType">_TaxDeductionType_</span></li>
+                <li>บริษัทประกัน: <span class="text-primary" id="riderPlanViewInsurerName">_InsurerName_</span></li>
+                <li>บันทึกเพิ่มเติม: <span class="text-primary" id="riderPlanViewNote">_Note_</span></li>
+                <li>โบรชัวร์: <span class="text-primary" id="riderPlanViewBrochure">_Brochure_</span></li>
+              </ul>
+            </div>
+
+            <!-- <div class="d-flex">
+              <div class="ms-auto">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Close</button>
+              </div>
+            </div> -->
+
+          </div>
+        </div>
+        <!-- Card end -->
+
+      </div>
+      <!-- Modal body end -->
+    </div>
+  </div>
+</div>

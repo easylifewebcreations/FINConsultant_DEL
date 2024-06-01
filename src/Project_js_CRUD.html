@@ -1,0 +1,596 @@
+<script>
+  // **************************************************** //
+// รับข้อมูลจากผู้ใช้
+// **************************************************** //
+  function JFormSubmit(_formObj) {
+    event.preventDefault()
+    
+    // ตรวจสอบโมดูล
+    const module = _formObj.formProcess.value
+    const running = JRunningModule(module)
+    // const modalID = module + MODAL
+    // const formID = module + FORM
+
+    console.log('JFormSubmit module:', running)
+
+    // เลือกคำสั่ง
+    switch (module) {
+      case MODULE_USER:
+        JValidateFormUser(_formObj)
+        break
+      case MODULE_USER_SIGNUP:
+        JValidateFormSignup(_formObj)
+        break
+      case MODULE_CUSTOMER:
+        JValidateFormCustomer(_formObj)
+        break
+      case MODULE_MAIN_CONTRACT:
+        JValidateFormMainContract(_formObj)
+        break
+      case MODULE_HS_PLAN:
+        // const form = document.getElementById(FORM_HS_PACKAGE)
+        // const list = form.querySelectorAll('[name="limit"]')
+        // list.forEach(function(element) {
+        //   console.log('list.value:', element.value)
+        // })
+        JValidateFormPlan(_formObj)
+        break
+      case MODULE_HS_PACKAGE:
+        JValidateFormHsPackage(_formObj)
+        break
+    }
+  }
+
+
+
+// **************************************************** //
+// บันทึกข้อมูล(เพิ่ม/แก้ไข)
+// **************************************************** //
+  function JSaveData(_formObj) {
+    const mode = _formObj.submitButton.value // โหมดการทำงาน
+    // เลือกโหมดการทำงาน
+    if (mode === MODE_ADD) {
+      google.script.run.withSuccessHandler(JResponseSaveData).AddData(_formObj)
+    } else if (mode === MODE_EDIT) {
+      google.script.run.withSuccessHandler(JResponseSaveData).EditData(_formObj)
+    }
+  }
+
+
+
+// **************************************************** //
+// ตรวจสอบการเพิ่ม/แก้ไขข้อมูล
+// **************************************************** //
+  function JResponseSaveData(_responseJson) {
+    // แปลงข้อมูล json เป็นอ็อบเจ็ค
+    const response = JSON.parse(_responseJson)
+    const state = response.state
+    const message = response.message
+    const values = response.values
+    const sheetName = (values) ? values.sheetName : null
+    const duplicate = (values) ? values.duplicate : null
+    const module = response.module
+    const modal = response.modal
+
+    // ตราวจสอบการทำงาน
+    if (state) { // ไม่ล้มเหลว อ่านข้อมูลได้อาจจะมี/ไม่มีข้อมูล
+      if ((duplicate === null) || (duplicate === false)) { // สำเร็จ
+        JGetItemLastRows(module, sheetName, modal, message) // 
+        // JModalHide(modal) // ซ่อนโมดัล
+      } else { // มีข้อผิดพลาด ข้อมูลซ้ำ หรือ อื่น ๆ
+        SWAInfo(message) // แจ้งเตือนข้อผิดพลาด
+      }
+    } else { // ล้มเหลว
+      SWAError(message) // แจ้งเตือนข้อผิดพลาด
+    }
+  }
+
+
+
+// **************************************************** //
+// เพิ่มข้อมูล
+// **************************************************** //
+  function JAddData(_element) {
+    event.preventDefault()
+
+    // ตรวจสอบโมดูล
+    const module = _element.value
+    const running = JRunningModule(module)
+    const modalID = module + MODAL
+    const formID = module + FORM
+    console.log('JAddData module:', module , ', modal:', modalID , ', form:', formID)
+
+    JModalShow(modalID, formID)
+
+    // เลือกคำสั่ง
+    switch (module) {
+      case MODULE_USER:
+        JAddDataUser()
+        break
+      case MODULE_CUSTOMER:
+        JAddDataCustomer()
+        break
+      case MODULE_MAIN_CONTRACT:
+        JAddDataMainContract()
+        break
+      case MODULE_HS_PLAN:
+        JAddDataHsPlan()
+        break
+      case MODULE_HS_PACKAGE:
+        JAddDataHsPackage()
+        break
+      // case MODULE_CI_PLAN:
+      //   JAddDataCiPlan()
+      //   break
+      // case MODULE_AI_PLAN:
+      //   JAddDataAiPlan()
+      //   break
+      // case MODULE_HB_PLAN:
+      //   JAddDataHbPlan()
+      //   break
+      // case MODULE_WP_PLAN:
+      //   JAddDataWpPlan()
+      //   break
+      case MODULE_POLICY:
+        JAddDataPolicy()
+        break
+    }
+  }
+
+
+
+// **************************************************** //
+// ดูข้อมูล
+// **************************************************** //
+  function JViewData(_element) {
+    event.preventDefault()
+    
+    SWALoading() // แสดงแถบโหลด
+    
+    // อินพุต
+    const element = _element.value
+    const elementArr = element.split(':')
+    const getModule = elementArr[0]
+    const getDataID = elementArr[1]
+
+    // ตรวจสอบโมดูล
+    const running = JRunningModule(getModule)
+    const module = running.module
+    const sheetName = running.sheetName
+    const modalID = module + MODAL_VIEW
+    
+    const dataObj = {
+      sheetName: sheetName,
+      dataID: getDataID
+    } // เตรียมข้อมูลส่ง gas
+    
+    console.log('view running:', running ,' >> dataObj:', dataObj)
+
+    // อ่านข้อมูลจากชีท
+    google.script.run.withSuccessHandler(function (_responseJson) {
+      // แปลงข้อมูล json เป็นอ็อบเจ็ค
+      const response = JSON.parse(_responseJson)
+      const state = response.state
+      const message = response.message
+      const value = response.values
+      console.log('response view:', response)
+
+      // ตรวจสอบการอ่านข้อมูล
+      if (state) { // พบข้อมูล
+        Swal.close() // ปิด sweet alert
+        JModalShow(modalID, null) // แสดงโมดัล
+
+        // เลือกคำสั่ง
+        switch (module) {
+          case MODULE_USER:
+            JViewDataUser(value)
+            break
+          case MODULE_CUSTOMER:
+            JViewDataCustomer(value)
+          break
+          case MODULE_MAIN_CONTRACT:
+            JViewDataMainContract(value)
+            break
+          case MODULE_HS_PLAN:
+            JViewDataHsPlan(value)
+            break
+          case MODULE_CI_PLAN:
+            JViewDataCiPlan(value)
+            break
+          case MODULE_AI_PLAN:
+            JViewDataAiPlan(value)
+            break
+          case MODULE_HB_PLAN:
+            JViewDataHbPlan(value)
+            break
+          case MODULE_WP_PLAN:
+            JViewDataWpPlan(value)
+            break
+          case MODULE_POLICY:
+            JViewDataPolicy(value)
+            break
+        }
+      } else { // ไม่พบข้อมูล
+        SWAError(message) // แจ้งเตือนข้อผิดพลาด
+      }
+    }).GetItem(JSON.stringify(dataObj))
+  }
+
+
+
+// **************************************************** //
+// แก้ไขข้อมูล
+// **************************************************** //
+  function JEditData(_element) {
+    event.preventDefault()
+
+    SWALoading() // แสดงแถบโหลด
+
+    // อินพุต
+    const element = _element.value
+    const elementArr = element.split(':')
+    const getModule = elementArr[0]
+    const getDataID = elementArr[1]
+
+    // ตรวจสอบโมดูล
+    const running = JRunningModule(getModule)
+    const module = running.module
+    const sheetName = running.sheetName
+    const modalID = module + MODAL
+    const formID = module + FORM
+
+    const dataObj = {
+      sheetName: sheetName,
+      dataID: getDataID
+    } // เตรียมข้อมูลส่ง gas
+
+    console.log('edit running:', running ,' >> dataObj:', dataObj)
+    console.log('modalID:', modalID , ', formID:', formID)
+
+    // อ่านข้อมูลจากชีท
+    google.script.run.withSuccessHandler(function (_responseJson) {
+      // แปลงข้อมูล json เป็นอ็อบเจ็ค
+      const response = JSON.parse(_responseJson)
+      const state = response.state
+      const message = response.message
+      const value = response.values
+      console.log('edit response:', response)
+
+      // ตรวจสอบการอ่านข้อมูล
+      if (state) { // พบข้อมูล
+        Swal.close() // ปิดแถบโหลด
+        JModalShow(modalID, formID) // แสดงโมดัล
+
+        // เลือกคำสั่ง
+        switch (module) {
+          case MODULE_USER:
+            JEditDataUser(value)
+            break
+          case MODULE_CUSTOMER:
+            JEditDataCustomer(value)
+          break
+          case MODULE_MAIN_CONTRACT:
+            JEditDataMainContract(value)
+            break
+          case MODULE_HS_PLAN:
+            JEditDataHsPlan(value)
+            break
+          case MODULE_HS_PACKAGE:
+            JEditDataHsPackage(value)
+            break
+          case MODULE_CI_PLAN:
+            JEditDataCiPlan(value)
+            break
+          case MODULE_AI_PLAN:
+            JEditDataAiPlan(value)
+            break
+          case MODULE_HB_PLAN:
+            JEditDataHbPlan(value)
+            break
+          case MODULE_WP_PLAN:
+            JEditDataWpPlan(value)
+            break
+          case MODULE_POLICY:
+            JEditDataPolicy(value)
+            break
+        }
+      } else { // ไม่พบข้อมูล
+        SWAError(message) // แจ้งเตือนข้อผิดพลาด
+      }
+    }).GetItem(JSON.stringify(dataObj))
+  }
+  
+
+
+// **************************************************** //
+// ลบข้อมูล
+// **************************************************** //
+  function JDeleteData(_element) {
+    // แจ้งเตือนเพื่อยืนยัน
+    Swal.fire({
+      title: 'คุณต้องการลบข้อมูล ใช่หรือไม่ ?',
+      // text: 'ลบแล้วจะไม่สามารถนำข้อมูลกลับมาได้อีก',
+      icon: 'warning',
+      // confirmButtonText: 'ยืนยัน',
+      // confirmButtonColor: '#d33',
+      showCancelButton: true,
+      // cancelButtonText: 'ยกเลิก',
+    }).then((result) => {
+      if (result.isConfirmed) { // ยืนยันคำสั่ง
+        SWALoading() // เปิดแถบโหลด
+
+        // อินพุต
+        const element = _element.value
+        const elementArr = element.split(':')
+        const getModule = elementArr[0]
+        const getDataID = elementArr[1]
+
+        // ตรวจสอบโมดูล
+        const running = JRunningModule(getModule)
+        const sheetName = running.sheetName
+        
+        const dataObj = {
+          module: getModule,
+          sheetName: sheetName,
+          dataID: getDataID
+        } // เตรียมข้อมูลส่งให้ gas
+        console.log('dataObj;', dataObj)
+
+        // ลบข้อมูลในชีท
+        google.script.run.withSuccessHandler(function(_responseJson) {
+          // แปลงข้อมูล json เป็นอ็อบเจ็ค
+          const response = JSON.parse(_responseJson)
+          const state = response.state
+          const message = response.message
+
+          // ตรวจสอบการลบข้อมูล
+          if (state) { // ลบสำเร็จ
+            JGetItemLastRows(getModule, sheetName, null, message) // อ่านข้อมูลจากชีท
+          } else { // การลบล้มเหลว
+            SWAError(message) // แจ้งเตือนข้อผิดพลาด
+          }
+        }).DeleteData(JSON.stringify(dataObj))
+      }
+    })
+  }
+
+
+
+// **************************************************** //
+// ค้นหาข้อมูล แบบเก่า
+// **************************************************** //
+  // function JSearch(_formObj) {
+  //   event.preventDefault()
+  //   // Get input
+  //   const searchHeader = _formObj.searchHeader.value
+  //   const searchText = _formObj.searchText.value.trim()
+  //   const running = JRunningModule(_formObj.search.value)
+  //   const sheetName = running.sheetName
+  //   // Validation input
+  //   if ((searchText === '') && (searchHeader !== TEXT_ALL)) {
+  //     SWAInfo('คุณต้องการค้นหาอะไร บอกฉันมาได้เลย')
+  //   } else {
+  //     const dataObj = {
+  //       sheetName: sheetName,
+  //       searchHeader: searchHeader,
+  //       searchText: searchText
+  //     }
+  //     SWALoading()
+  //     google.script.run.withSuccessHandler(function (_responseJson) {
+  //       ShowDataTable(sheetName, _responseJson)
+  //       Swal.close()
+  //     }).Search(JSON.stringify(dataObj))
+  //   }
+  // }
+
+
+
+// **************************************************** //
+// ค้นหาข้อมูลแบบหลายเงื่อนไข
+// **************************************************** //
+  function JSearchData(_formObj) {
+    event.preventDefault()
+    
+    // ตรวจสอบโมดูล
+    const module  = _formObj.search.value
+    const running = JRunningModule(module)
+    // const modal = running.modal
+    const sheetName = running.sheetName
+    console.log('searchdata running;', running)
+    const modal = module + 'SearchModal'
+
+    // JModalHide(modal) // ซ่อนโมดัล
+    SWALoading() // เปิดแถบโหลด
+
+    // เลือกคำสั่ง
+    let criteria = null
+    let multiSheet = false
+    switch(module){
+      case MODULE_USER:
+        criteria = [
+          { header: 'Username', value: _formObj.userSearchUsername.value },
+          { header: 'Firstname', value: _formObj.userSearchFirstname.value },
+          { header: 'Lastname', value: _formObj.userSearchLastname.value },
+          { header: 'Level', value: _formObj.userSearchLevel.value },
+          { header: 'Status', value: _formObj.userSearchStatus.value }
+        ]
+        multiSheet = false
+        break
+      case MODULE_CUSTOMER:
+        criteria = [
+          { header: 'Firstname', value: _formObj.customerSearchFirstname.value },
+          { header: 'Lastname', value: _formObj.customerSearchLastname.value },
+          { header: 'Nickname', value: _formObj.customerSearchNickname.value },
+          { header: 'Birthday', value: _formObj.customerSearchBirthday.value },
+          { header: 'Sex', value: _formObj.customerSearchSex.value },
+          { header: 'MaritalStatus', value: _formObj.customerSearchMaritalStatus.value }
+        ]
+        multiSheet = false
+        break
+      case MODULE_MAIN_CONTRACT:
+        criteria = [
+          { header: 'NameTH', value: _formObj.mainContractSearchNameTH.value },
+          { header: 'NameEN', value: _formObj.mainContractSearchNameEN.value },
+          { header: 'ContractType', value: _formObj.mainContractSearchContractType.value },
+          { header: 'ContractGroup', value: _formObj.mainContractSearchContractGroup.value },
+          { header: 'TaxDeductionType', value: _formObj.mainContractSearchTaxDeductionType.value },
+          { header: 'InsurerID', value: _formObj.mainContractSearchInsurerID.value }
+        ]
+        multiSheet = false
+        break
+      case MODULE_HS_PLAN:
+        criteria = [
+          { header: 'PlanID', value: _formObj.hsPlanSearchPlanID.value },
+          { header: 'InsurerID', value: _formObj.hsPlanSearchInsurerID.value }
+        ]
+        multiSheet = false
+        break
+      case MODULE_HS_PACKAGE:
+        criteria = [
+          { header: 'PlanID', value: _formObj.hsPackageSearchPlanID.value },
+          { header: 'PackageID', value: _formObj.hsPackageSearchPackageID.value },
+          { header: 'InsurerID', value: _formObj.hsPackageSearchInsurerID.value }
+        ]
+        multiSheet = true
+        break
+      case MODULE_CI_PLAN:
+        criteria = [
+          // { header: '', value: _formObj.value },
+          // { header: '', value: _formObj.value }
+        ]
+        multiSheet = false
+        break
+      case MODULE_AI_PLAN:
+        criteria = [
+          // { header: '', value: _formObj.value },
+          // { header: '', value: _formObj.value }
+        ]
+        multiSheet = false
+        break
+      case MODULE_HB_PLAN:
+        criteria = [
+          // { header: '', value: _formObj.value },
+          // { header: '', value: _formObj.value }
+        ]
+        multiSheet = false
+        break
+      case MODULE_WP_PLAN:
+        criteria = [
+          // { header: '', value: _formObj.value },
+          // { header: '', value: _formObj.value }
+        ]
+        multiSheet = false
+        break
+      case MODULE_POLICY:
+        criteria = [
+          { header: 'PolicyNo', value: _formObj.searchPolicyNo.value },
+          { header: 'InsuredID', value: _formObj.searchInsured.value },
+          { header: 'OwnerID', value: _formObj.searchOwner.value },
+          { header: 'PolicyStatus', value: _formObj.searchStatus.value },
+          { header: 'PaymentDateStart', value: _formObj.searchPaymentDateStart.value },
+          { header: 'PatmentDateEnd', value: _formObj.searchPaymentDateEnd.value },
+          { header: 'ServiceAgentID', value: _formObj.searchServiceAgent.value },
+          { header: 'select2AgentName', value: _formObj.select2AgentName.value }
+        ]
+        break
+    }
+
+    const dataObj = {
+      module: module,
+      sheetName: sheetName,
+      criteria: criteria,
+      multiSheet: multiSheet
+    } // เตรียมข้อมูลส่ง gas
+    console.log('search by data:', dataObj)
+    
+    // ค้นหาข้อมูลจากชีท
+    google.script.run.withSuccessHandler(function (_responseJson) {
+      // แปลงข้อมูล json เป็นอ็อบเจ็ค
+      const response = JSON.parse(_responseJson)
+      const state = response.state
+      const message = response.message
+      console.log('search respons:', response)
+      
+      // ตรวจสอบการอ่านข้อมูล
+      if (state) { // สำเร็จ
+        JShowDataTable(module, response) // แสดงข้อมูลบน datatables
+        JModalHide(modal)
+        Swal.close() // ปิดแถบโหลด
+      } else { // ล้มเหลว
+        SWAError(message) // แจ้งเตือน การอ่านข้อมูลล้มเหลว
+      }
+    }).SearchData(JSON.stringify(dataObj))
+  }
+
+
+
+// **************************************************** //
+// อ่านข้อมูลทั้งหมด
+// **************************************************** //
+function JGetAllItems(element) {
+  event.preventDefault()
+  
+  SWALoading() // เปิดแถบโหลด
+    
+  // ตรวจสอบโมดูล
+  const module = element.value
+  const running = JRunningModule(module)
+  const sheetName = running.sheetName
+
+  const dataObj = {
+    module: module,
+    sheetName: sheetName,
+    getAllData: true
+  } // เตรียมข้อมูลส่ง gas
+  console.log('dataObj;',dataObj)
+  // อ่านข้อมูลจากชีท
+  google.script.run.withSuccessHandler(function (_responseJson) {
+    // แปลงข้อมูล json เป็นอ็อบเจ็ค
+    const response = JSON.parse(_responseJson)
+    const state = response.state
+    const message = response.message
+
+    // ตรวจสอบการอ่านข้อมูล
+    if (state) { // สำเร็จ
+      JShowDataTable(module, response) // แสดงข้อมูลบน datatables
+      Swal.close() // ปิดแถบโหลด
+    } else { // ล้มเหลว
+      SWAError(message) // แจ้งเตือน การอ่านข้อมูลล้มเหลว
+    }
+  }).GetItemLastRows(JSON.stringify(dataObj))
+}
+
+
+
+// **************************************************** //
+// อ่านข้อมูลล่าสุด ตามจำนวน
+// **************************************************** //
+  function JGetItemLastRows(_module, _sheetName, _modal, _title) {
+    const dataObj = {
+      module: _module,
+      sheetName: _sheetName,
+      getAllData: false
+    } // เตรียมข้อมูลส่ง gas
+    
+    // อ่านข้อมูลจากชีท
+    google.script.run.withSuccessHandler(function (_responseJson) {
+      // แปลงข้อมูล json เป็นอ็อบเจ็ค
+      const data = JSON.parse(_responseJson)
+      const state = data.state
+      const message = data.message
+      // const items = data.values
+
+      // ตรวจสอบการอ่านข้อมูล
+      if (state) { // ไม่ล้มเหลว
+        JShowDataTable(_module, data) // แสดงข้อมูลบน datatables
+        SWASuccess(_title) // แจ้งเตือนอ่านข้อมูลสำเร็จ
+        // ซ่อนโมดัล
+        if (_modal) {
+          JModalHide(_modal) // ซ่อนโมดัล
+        }
+      } else { // เกิดข้อผิดพลาดในการอ่านข้อมูล
+        SWAError(message)
+      }
+    }).GetItemLastRows(JSON.stringify(dataObj))
+  }
+</script>

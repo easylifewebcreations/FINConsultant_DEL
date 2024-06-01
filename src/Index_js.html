@@ -1,0 +1,127 @@
+<script>
+  function JSignin(_formObj) {
+    event.preventDefault()
+    console.log('JSignin>>')
+    // Get input
+    const appUrl = document.getElementById("appUrl")
+    const signinForm = document.getElementById('signinForm')
+    const username = _formObj.username.value.trim()
+    const password = _formObj.password.value.trim()
+    const dataObj = {
+      sheet: 'user_details',
+      username: username,
+      password: password
+    }
+    console.log('dataObj;', dataObj)
+    
+    if (username === '' || password === '') {
+      SWAInfo('ชื่อบัญชีผู้ใช้และหรือรหัสผ่านไม่ถูกต้อง')
+      signinForm.reset()
+    } else {
+      SWALoading()
+      // SIGN-IN PROCESS
+      google.script.run.withSuccessHandler(function (_responseJson) {
+        const response = JSON.parse(_responseJson)
+        const state = response.state
+        const message = response.message
+        if (state) {
+          signinForm.reset()
+          appUrl.click()
+          SWASuccess(message)
+        } else {
+          signinForm.reset()
+          SWAError(message)
+        }
+      }).Signin(JSON.stringify(dataObj))
+    }
+  }
+  
+
+
+  function JFormSubmitSignup(_formObj) {
+    event.preventDefault()
+    // Get input
+    const signupForm = document.getElementById('signupForm')
+    const signupUsername = document.getElementById('signupUsername')
+    const signupPassword = document.getElementById('signupPassword')
+    const signupConfirmPassword = document.getElementById('signupConfirmPassword')
+    if (JValidationSignup()) {
+      SWALoading()
+      // SIGN-UP PROCESS
+      google.script.run.withSuccessHandler(function (_responseJson) {
+        const response = JSON.parse(_responseJson)
+        const state = response.state
+        const message = response.message
+        if (state) {
+          SWASuccess(message)
+          signupForm.reset()
+          JDisplayPage('container', 'signinContainer')
+        } else {
+          SWAInfo(message)
+          signupUsername.value = ''
+          signupPassword.value = ''
+          signupConfirmPassword.value = ''
+        }
+      }).AddData(_formObj)
+    }
+  }
+
+
+
+  function JValidationSignup() {
+    const signupForm = document.getElementById('signupForm')
+    const signupUsername = document.getElementById('signupUsername')
+    const signupPassword = document.getElementById('signupPassword')
+    const signupConfirmPassword = document.getElementById('signupConfirmPassword')
+    const signupFirstname = document.getElementById('signupFirstname')
+    const signupLastname = document.getElementById('signupLastname')
+    const signupEmail = document.getElementById('signupEmail')
+    const signupProfilePicture = document.getElementById('signupProfilePicture')
+
+    const msgInfoSignupPassword = document.getElementById('msgInfoSignupPassword')
+    const msgInfoSignupConfirmPassword = document.getElementById('msgInfoSignupConfirmPassword')
+
+    const username = signupUsername.value.trim()
+    const password = signupPassword.value.trim()
+    const confirmPassword = signupConfirmPassword.value.trim()
+    const firstname = signupFirstname.value.trim()
+    const lastname = signupLastname.value.trim()
+    const email = signupEmail.value.trim()
+    const profilePicture = signupProfilePicture.value.trim()    
+
+    if (username === '' || password === '' || (password != confirmPassword) || firstname === '' || lastname === '' || email === '' || profilePicture === '') {
+      // JMsgInfoTrigger('msgInfoSignupUsername', 'signupUsername', username)
+      // JMsgInfoTrigger('msgInfoSignupPassword', 'signupPassword', password)
+      // JMsgInfoTrigger('msgInfoSignupConfirmPassword', 'signupConfirmPassword', confirmPassword)
+      // JMsgInfoTrigger('msgInfoSignupFirstname', 'signupFirstname', firstname)
+      // JMsgInfoTrigger('msgInfoSignupLastname', 'signupLastname', lastname)
+      // JMsgInfoTrigger('msgInfoSignupEmail', 'signupEmail', email)
+
+      if (password != confirmPassword) {
+        // Password
+        signupPassword.value = ''
+        msgInfoSignupPassword.value = ''
+        msgInfoSignupPassword.style.display = 'none'
+        // Confirm password
+        signupConfirmPassword.value = ''
+        msgInfoSignupConfirmPassword.value = ''
+        msgInfoSignupConfirmPassword.style.display = 'block'
+      }
+      SWAInfo(MSG_INPUT_FORM_ERROR)
+      return false
+    } else {
+      return true
+    }
+  }
+
+
+
+  function JDisplayPage(_elementClass, _elementId) {
+    let content = document.getElementsByClassName(_elementClass)
+    for (let i = 0; i < content.length; i++) {
+      content[i].style.display = 'none'
+    }
+    document.getElementById(_elementId).style.display = 'block'
+  }
+
+</script>

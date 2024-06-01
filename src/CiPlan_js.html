@@ -1,0 +1,197 @@
+<script>
+  function JValidateFormRiderContract(_formObj) {
+    // Get input
+    const dataObj = [
+      _formObj.code.value.trim(),
+      _formObj.nameTH.value.trim(),
+      _formObj.nameEN.value.trim(),
+      _formObj.premiumPaymentPeriod.value.trim(),
+      _formObj.premiumPaymentPeriodType.value,
+      _formObj.protectionPeriod.value.trim(),
+      _formObj.protectionPeriodType.value,
+      _formObj.contractType.value,
+      _formObj.contractGroup.value,
+      _formObj.taxDeduction.value,
+      _formObj.taxDeductionType.value,
+      _formObj.insurerID.value
+    ]
+    // const code = _formObj.code.value.trim()
+    // const nameTH = _formObj.nameTH.value.trim()
+    // const nameEN = _formObj.nameEN.value.trim()
+    // const premiumPaymentPeriod = _formObj.premiumPaymentPeriod.value.trim()
+    // const premiumPaymentPeriodType = _formObj.premiumPaymentPeriodType.value
+    // const protectionPeriod = _formObj.protectionPeriod.value.trim()
+    // const protectionPeriodType = _formObj.protectionPeriodType.value
+    // const contractType = _formObj.contractType.value
+    // const contractGroup = _formObj.contractGroup.value
+    // const taxDeduction = _formObj.taxDeduction.value
+    // const taxDeductionType = _formObj.taxDeductionType.value
+    // const insurerID = _formObj.insurerID.value
+    // const mode = _formObj.submitButton.value
+    // if (code === '' || nameTH === '' || nameEN === '' || premiumPaymentPeriod === '' || premiumPaymentPeriodType === '' || protectionPeriod === '' || protectionPeriodType === '' || contractType === '' || contractGroup === '' || taxDeduction === '' || taxDeductionType === '' || insurerID === '') {
+    if (JHasEmptyData(dataObj)) { 
+      SWAInfo(MSG_INPUT_FORM_ERROR)
+    } else {
+      ModalDisplay(MODAL_RIDERCONTRACT, false)
+      SWALoading()
+      JBeforeResponseFormSubmit(_formObj)
+    }
+  }
+
+  function JAddDataRiderContract(_data) {
+    // Reset all form
+    const formID = FORM_RIDER_CONTRACT
+    JResetForm(formID)
+    const elementObj = [
+      { type: SET_ATTRIBUTE_READONLY, id: 'riderContractDataID', value: true },
+      { type: SET_VALUE, id: 'riderContractSubmitButton', value: TEXT_ADD }
+    ]
+    JPopulateForm(elementObj)
+    // document.getElementById('riderContractDataID').readOnly = true
+    // Set action mode to submit-button
+    // document.getElementById('riderContractSubmitButton').value = TEXT_ADD
+  }
+
+  function JViewDataRiderContract(_data) {
+    const premiumPaymentPeriod = _data.PremiumPaymentPeriodType + ' ' + _data.PremiumPaymentPeriod
+    const protectionPeriod = _data.ProtectionPeriodType + ' ' + _data.ProtectionPeriod
+    const elementObj = [
+      { type: SET_INNERHTML, id: 'riderContractViewTitleName', value: _data.NameEN },
+      { type: SET_INNERHTML, id: 'riderContractViewTitleDataID', value: _data.ContractID },
+      { type: SET_INNERHTML, id: 'riderContractViewCode', value: _data.Code },
+      { type: SET_INNERHTML, id: 'riderContractViewNameTH', value: _data.NameTH },
+      { type: SET_INNERHTML, id: 'riderContractViewNameEN', value: _data.NameEN },
+      { type: SET_INNERHTML, id: 'riderContractViewPremiumPaymentPeriod', value: premiumPaymentPeriod },
+      { type: SET_INNERHTML, id: 'riderContractViewProtectionPeriod', value: protectionPeriod },
+      { type: SET_INNERHTML, id: 'riderContractViewContractType', value: _data.ContractType },
+      { type: SET_INNERHTML, id: 'riderContractViewContractGroup', value: _data.ContractGroup },
+      { type: SET_INNERHTML, id: 'riderContractViewTaxDeduction', value: _data.TaxDeduction },
+      { type: SET_INNERHTML, id: 'riderContractViewTaxDeductionType', value: _data.TaxDeductionType },
+      { type: SET_INNERHTML, id: 'riderContractViewBrochure', value: '<a href="' + _data.BrochureUrl + '"><i class="bi bi-floppy"></i> Brochure</a>' },
+      { type: SET_INNERHTML, id: 'riderContractViewInsurerName', value: _data.InsurerName },
+      { type: SET_INNERHTML, id: 'riderContractViewNote', value: _data.Note }
+    ]
+    JPopulateForm(elementObj)
+
+    // document.getElementById('riderContractViewTitleName').innerHTML = _data.NameEN
+    // document.getElementById('riderContractViewTitleDataID').innerHTML = _data.ContractID
+    // document.getElementById('riderContractViewCode').innerHTML = _data.Code
+    // document.getElementById('riderContractViewNameTH').innerHTML = _data.NameTH
+    // document.getElementById('riderContractViewNameEN').innerHTML = _data.NameEN
+    // // document.getElementById('riderContractViewPremiumPaymentPeriodType').innerHTML = _data.PremiumPaymentPeriodType
+    // const premiumPaymentPeriod = _data.PremiumPaymentPeriodType + ' ' + _data.PremiumPaymentPeriod
+    // document.getElementById('riderContractViewPremiumPaymentPeriod').innerHTML = premiumPaymentPeriod
+    // // document.getElementById('riderContractViewProtectionPeriodType').innerHTML = _data.ProtectionPeriodType
+    // const protectionPeriod = _data.ProtectionPeriodType + ' ' + _data.ProtectionPeriod
+    // document.getElementById('riderContractViewProtectionPeriod').innerHTML = protectionPeriod
+    // document.getElementById('riderContractViewContractType').innerHTML = _data.ContractType
+    // document.getElementById('riderContractViewContractGroup').innerHTML = _data.ContractGroup
+    // document.getElementById('riderContractViewTaxDeduction').innerHTML = _data.TaxDeduction
+    // document.getElementById('riderContractViewTaxDeductionType').innerHTML = _data.TaxDeductionType
+    // // document.getElementById('riderContractViewBrochure').innerHTML = _data.BrochureUrl
+    // document.getElementById('riderContractViewBrochure').innerHTML = '<a href="' + _data.BrochureUrl + '"><i class="bi bi-floppy"></i> Brochure</a>'
+    // document.getElementById('riderContractViewInsurerName').innerHTML = _data.InsurerName
+    // document.getElementById('riderContractViewNote').innerHTML = _data.Note
+  }
+
+  function JEditDataRiderContract(_data) {
+    // Reset all form
+    const formID = FORM_RIDER_CONTRACT
+    JResetForm(formID)
+    const elementObj = [
+      { type: SET_VALUE, id: 'riderContractDataID', value: _data.ContractID },
+      { type: SET_VALUE, id: 'riderContractCode', value: _data.Code },
+      { type: SET_VALUE, id: 'riderContractNameTH', value: _data.NameTH },
+      { type: SET_VALUE, id: 'riderContractNameEN', value: _data.NameEN },
+      { type: SET_RADIO, id: 'premiumPaymentPeriodType', value: _data.PremiumPaymentPeriodType },
+      { type: SET_VALUE, id: 'riderContractPremiumPaymentPeriod', value: _data.PremiumPaymentPeriod },
+      { type: SET_RADIO, id: 'protectionPeriodType', value: _data.ProtectionPeriodType },
+      { type: SET_VALUE, id: 'riderContractProtectionPeriod', value: _data.ProtectionPeriod },
+      { type: SET_VALUE_SELECT2, id: 'riderContractContractType', value: _data.ContractType },
+      { type: SET_VALUE_SELECT2, id: 'riderContractContractGroup', value: _data.ContractGroup },
+      { type: SET_VALUE_SELECT2, id: 'riderContractTaxDeduction', value: _data.TaxDeduction },
+      { type: SET_VALUE_SELECT2, id: 'riderContractTaxDeductionType', value: _data.TaxDeductionType },
+      { type: SET_VALUE_SELECT2, id: 'riderContractInsurerID', value: _data.InsurerID },
+      { type: SET_VALUE, id: 'riderContractNote', value: _data.Note },
+      { type: SET_VALUE, id: 'riderContractSubmitButton', value: TEXT_EDIT }
+    ]
+    JPopulateForm(elementObj)
+
+    // document.getElementById('riderContractForm').reset()
+    // document.getElementById('riderContractDataID').value = _data.ContractID
+    // document.getElementById('riderContractCode').value = _data.Code
+    // document.getElementById('riderContractNameTH').value = _data.NameTH
+    // document.getElementById('riderContractNameEN').value = _data.NameEN
+    // SetCheckedRadioButton('premiumPaymentPeriodType',_data.PremiumPaymentPeriodType)
+    // document.getElementById('riderContractPremiumPaymentPeriod').value = _data.PremiumPaymentPeriod
+    // SetCheckedRadioButton('protectionPeriodType',_data.ProtectionPeriodType)
+    // document.getElementById('riderContractProtectionPeriod').value = _data.ProtectionPeriod
+    // document.getElementById('riderContractContractType').value = _data.ContractType
+    // document.getElementById('riderContractContractGroup').value = _data.ContractGroup
+    // document.getElementById('riderContractTaxDeduction').value = _data.TaxDeduction
+    // document.getElementById('riderContractTaxDeductionType').value = _data.TaxDeductionType
+    // document.getElementById('riderContractInsurerID').value = _data.InsurerID
+    // document.getElementById('riderContractNote').value = _data.Note
+    // // Set action mode to submit-button
+    // document.getElementById('riderContractSubmitButton').value = 'EDIT'
+  }
+
+// ***************************************************************************
+  //CREATE THE DATA TABLE
+  function JDataTableRiderContract(_jsonData) {
+    const data = JSON.parse(_jsonData)
+    const state = data.state
+    const items = data.values
+    if (state) {
+      $(document).ready(function(){
+        $('#riderContractTable').DataTable({
+          destroy: true,
+          responsive: true,
+          data: items,
+          colReorder: true,
+          lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "ทั้งหมด"]],
+          order: [[0, "desc"]], 
+          sPaginationType: "full_numbers",
+          columns: [
+            { title: "ไอดี" },
+            { title: "ชื่อย่อ" },
+            { title: "ชื่อภาษาไทย" },
+            { title: "ชื่อภาษาอังกฤษ" },
+            { title: "ระยะเวลาชำระเบี้ย"},
+            { title: "ระยะเวลาคุ้มครอง"},
+            { title: "รูปแบบประกัน"},
+            { title: "เอกสารประกอบ",
+              render: function(data, type, row, meta) {
+                return '<img src="' + data + '" class="img-fluid rounded-circle mb-2 img-3x" />'
+            }},
+            { title: "จัดการข้อมูล",
+              render: function(data, type, row, meta) {
+                return '<div class="d-inline-flex gap-2">' +
+                  '<button type="button" class="btn btn-success" onclick="JViewData(this)" value="' + PROCESS_RIDERCONTRACT_R + ':' + row[0] + '"><i class="bi bi-eye"></i></button>' +
+								  '<button type="button" class="btn btn-primary" onclick="JEditData(this)" value="' + PROCESS_RIDERCONTRACT_CU + ':' + row[0] + '"><i class="bi bi-pencil"></i></button>' +
+                  '<button type="button" class="btn btn-danger" onclick="JDeleteData(this)" value="' + PROCESS_RIDERCONTRACT_D  + ':' + row[0] + '"><i class="bi bi-trash3"></i></button>' +
+                  '</div>'            
+            }}
+          ],
+          language: {
+            sProcessing: "กำลังดำเนินการ...",
+            sLengthMenu: "แสดง _MENU_ แถว",
+            sZeroRecords: "ไม่มีข้อมูล",
+            sInfo: "แสดง _START_ ถึง _END_ จาก _TOTAL_ แถว",
+            sInfoEmpty: "แสดง 0 ถึง 0 จาก 0 แถว",
+            sInfoFiltered: "(กรองข้อมูล _MAX_ ทุกแถว)",
+            sInfoPostFix: "",
+            sSearch: "ค้นหา:",
+            sUrl: "",
+            oPaginate: {
+              sFirst: "<< หน้าแรก",
+              sPrevious: "< ก่อนหน้า",
+              sNext: "ถัดไป >",
+              sLast: "หน้าสุดท้าย >>"
+            }
+          },
+        })
+      })
+    }
+  }
+</script>

@@ -1,0 +1,154 @@
+<script>
+  function JDefaultLoadLicense() {
+    event.preventDefault()
+
+    SWALoading()
+    google.script.run.withSuccessHandler(function (_responseJson) {
+      Swal.close()
+      const response = JSON.parse(_responseJson)
+      const state = response.state
+      const type = response.alert.type
+      const message = response.alert.message
+      const data = response.account.data
+      const status = response.account.status
+      const description = response.account.description
+      const email = (data) ? data.Email : ''
+      const code = (data) ? data.Code : ''
+      
+      JResetFormLicense()
+      if (status === STATUS_ACTIVATED) {
+        SWASuccess(MSG_WELCOME)
+      } else {
+        document.getElementById('licenseEmail').value = email
+        document.getElementById('licenseCode').value = code
+        ModalDisplay(MODAL_LICENSEMAN, true)
+        if (state){
+          document.getElementById('licenseAlert').innerHTML = JAlert(type, description)
+        }else {
+          SWAAlert(type, message)
+        }
+      }
+    }).GetLicense()
+  }
+
+  function JShowModalLicenseManagement() {
+    event.preventDefault()
+
+    SWALoading()
+    google.script.run.withSuccessHandler(function (_responseJson) {
+      const response = JSON.parse(_responseJson)
+      const state = response.state
+      const type = response.alert.type
+      const message = response.alert.message
+      const data = response.account.data
+      const status = response.account.status
+      const description = response.account.description
+      const email = (data) ? data.Email : ''
+      const code = (data) ? data.Code : ''
+
+      JResetFormLicense()
+      document.getElementById('licenseEmail').value = email
+      document.getElementById('licenseCode').value = code
+      document.getElementById('licenseAlert').innerHTML = JAlert(type, description)
+      ModalDisplay(MODAL_LICENSEMAN, true)
+      if (state) {
+        if(status === STATUS_ACTIVATED) {
+          JActivatedFormLicense()
+        }
+        Swal.close()
+      } else {
+        SWAAlert(type, message)
+      }
+    }).GetLicense()
+  }
+
+  function JFormSubmitLicenseMan(_formObj) {
+    event.preventDefault()
+
+    const emailForm = _formObj.email.value.trim()
+    const codeForm = _formObj.code.value.trim()
+
+    if (emailForm === '' || codeForm === '') {
+      JResetFormLicense()
+      SWAError('ข้อมูลไม่ถูกต้อง')
+    } else {
+      SWALoading()
+      const dataObj = {
+        email: emailForm,
+        code: codeForm
+      }
+      google.script.run.withSuccessHandler(function (_responseJson) {
+        const response = JSON.parse(_responseJson)
+        const state = response.state
+        const type = response.alert.type
+        const message = response.alert.message
+        const data = response.account.data
+        const status = response.account.status
+        const description = response.account.description
+        const email = (data) ? data.Email : emailForm
+        const code = (data) ? data.Code : codeForm
+
+        if (state) {
+          JResetFormLicense()
+          document.getElementById('licenseEmail').value = email
+          document.getElementById('licenseCode').value = code
+          document.getElementById('licenseAlert').innerHTML = JAlert(type, description)
+          if (status === STATUS_ACTIVATED) {
+            JActivatedFormLicense()
+            SWASuccess(message)
+          } else {
+            SWAAlert(type, message)
+          }
+        } else {
+          document.getElementById('licenseEmail').disabled = false
+          document.getElementById('licenseCode').disabled = false
+          document.getElementById('licenseManSubmitButton').disabled = false
+          document.getElementById('licenseManCloseButton').disabled = true
+          SWAAlert(type, message)
+        }
+      }).LicenseRegister(JSON.stringify(dataObj))
+    }
+  }
+
+  function JActivatedFormLicense() {
+    document.getElementById('licenseEmail').disabled = true
+    document.getElementById('licenseCode').disabled = true
+    document.getElementById('licenseManSubmitButton').disabled = true
+    document.getElementById('licenseManCloseButton').disabled = false
+  }
+
+  function JResetFormLicense() {
+    document.getElementById('licenseAlert').innerHTML = ''
+    document.getElementById('licenseEmail').value = ''
+    document.getElementById('licenseEmail').disabled = false
+    document.getElementById('licenseCode').value = ''
+    document.getElementById('licenseCode').disabled = false
+    document.getElementById('licenseManSubmitButton').disabled = false
+    document.getElementById('licenseManCloseButton').disabled = true
+  }
+
+  function JAlert(_type, _message) {
+    let tagHtml = null
+    switch (_type) {
+      case ALERT_TYPE_SUCCESS: 
+        tagHtml = '<div class="alert alert-success d-flex align-items-center fade show" id="licenseAlertDiv" role="alert">' +
+          '<i class="bi bi-check-circle fs-2 me-2 lh-1"></i>' + _message + '</div>'
+        break
+      case ALERT_TYPE_INFO:
+        tagHtml = '<div class="alert alert-info d-flex align-items-center fade show" id="licenseAlertDiv" role="alert">' +
+			    '<i class="bi bi-exclamation-circle fs-2 me-2 lh-1"></i>' + _message + '</div>'
+        break
+      case ALERT_TYPE_WARNING:
+        tagHtml = '<div class="alert alert-warning d-flex align-items-center fade show" id="licenseAlertDiv" role="alert">' +
+			    '<i class="bi bi-exclamation-circle fs-2 me-2 lh-1"></i>' + _message + '</div>'
+        break
+      case ALERT_TYPE_ERROR:
+        tagHtml = '<div class="alert alert-danger d-flex align-items-center fade show" id="licenseAlertDiv" role="alert">' +
+			    '<i class="bi bi-exclamation-circle fs-2 me-2 lh-1"></i>' + _message + '</div>'
+        break
+    }
+    // Return
+    return tagHtml
+  }
+
+</script>

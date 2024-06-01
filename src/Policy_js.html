@@ -1,0 +1,358 @@
+<script>
+const POLICY_HS_PLAN = 'policyHsPlan'
+const POLICY_CI_PLAN = 'policyCiPlan'
+const POLICY_HB_PLAN = 'policyHbPlan'
+const POLICY_AI_PLAN = 'policyAiPlan'
+const POLICY_WP_PLAN = 'policyWpPlan'
+const POLICY_DOCS = 'policyDocs'
+
+const ROWTABLE_POLICYMODAL_SELECT = [
+  { element: POLICY_HS_PLAN, elementAttribute: 'class', options: null, modalID: 'policyModal', tableID: 'policyHeatlhPlanTable', sheet: 'rider_contracts' },
+  { element: POLICY_CI_PLAN, elementAttribute: 'class', options: null, modalID: 'policyModal', tableID: 'policyCIPlanTable', sheet: 'rider_contracts' },
+  { element: POLICY_HB_PLAN, elementAttribute: 'class', options: null, modalID: 'policyModal', tableID: 'policyHBPlanTable', sheet: 'rider_contracts' },
+  { element: POLICY_AI_PLAN, elementAttribute: 'class', options: null, modalID: 'policyModal', tableID: 'policyAIPlanTable', sheet: 'rider_contracts' },
+  { element: POLICY_WP_PLAN, elementAttribute: 'class', options: null, modalID: 'policyModal', tableID: 'policyWPPlanTable', sheet: 'rider_contracts' },
+  { element: POLICY_DOCS, elementAttribute: 'class', options: null, modalID: 'policyModal', tableID: 'policyDocsTable', sheet: 'application_docs' }
+]
+
+$(document).ready(function() {
+  // JAddFirstRowTablePolicyAll()
+})
+
+function JAddFirstRowTablePolicyAll() {
+  JAddRowTable(POLICY_HEALTH_PLAN)
+  JAddRowTable(POLICY_CI_PLAN)
+  JAddRowTable(POLICY_HB_PLAN)
+  JAddRowTable(POLICY_AI_PLAN)
+  JAddRowTable(POLICY_WP_PLAN)
+  JAddRowTable(POLICY_DOCS)
+}
+
+function JAddRowTableClick(_element) {
+  JAddRowTable(_element.value)
+}
+
+function JAddRowTable(_element) {
+  let rowObj = ROWTABLE_POLICYMODAL_SELECT.find(row => row.element === _element)
+  const tableID = rowObj.tableID
+  const elementAppend = '#' + tableID + ' tbody'
+  const element = rowObj.element
+  let newRow = null
+  let criteriaObj = null
+  // let dataObj = null
+  switch (element) {
+    // Health part --------------------
+    case POLICY_HEALTH_PLAN:
+      newRow = 
+        '<tr>' +
+          '<tr class="col-12">' +
+            '<td class="col-11"><select class="form-select ' + element + '" name="' + element + '"></select></td>' +
+            '<td class="col-1"><button type="button" class="btn btn-outline-danger" onclick="removeRow(this)"><i class="bi bi-trash3"></i></button></td>' +
+          '</tr>' +
+        '</tr>'
+      // Add new row
+      $(elementAppend).append(newRow)
+      criteriaObj = { header: 'ContractGroup', value: 'ประกันสุขภาพ'}
+      JGetSelectOption(rowObj, criteriaObj)
+      break
+    
+    // CI part --------------------
+    case POLICY_CI_PLAN:
+      newRow = 
+        '<tr>' +
+          '<tr class="col-12">' +
+            '<td class="col-6"><select class="form-select ' + element + '" name="' + element + '"></select></td>' +
+            '<td class="col-5"><input type="text" class="form-control" name="ciPlanSumInsured"></td>' +
+            '<td class="col-1"><button type="button" class="btn btn-outline-danger" onclick="removeRow(this)"><i class="bi bi-trash3"></i></button></td>' +
+          '</tr>' +
+        '</tr>'
+      // Add new row
+      $(elementAppend).append(newRow)
+      criteriaObj = { header: 'ContractGroup', value: 'ประกันโรคร้าย'}
+      JGetSelectOption(rowObj, criteriaObj)
+      break
+
+    // HB part --------------------
+    case POLICY_HB_PLAN:
+      newRow = 
+        '<tr>' +
+          '<tr class="col-12">' +
+            '<td class="col-6"><select class="form-select ' + element + '" name="' + element + '"></select></td>' +
+            '<td class="col-5"><input type="text" class="form-control" name="hbPlanSumInsured"></td>' +
+            '<td class="col-1"><button type="button" class="btn btn-outline-danger" onclick="removeRow(this)"><i class="bi bi-trash3"></i></button></td>' +
+          '</tr>' +
+        '</tr>'
+      // Add new row
+      $(elementAppend).append(newRow)
+      criteriaObj = { header: 'ContractGroup', value: 'ประกันชดเชยรายได้'}
+      JGetSelectOption(rowObj, criteriaObj)
+      break
+
+    // AI part --------------------
+    case POLICY_AI_PLAN:
+      newRow = 
+        '<tr>' +
+          '<tr class="col-12">' +
+            '<td class="col-6"><select class="form-select ' + element + '" name="' + element + '"></select></td>' +
+            '<td class="col-5"><input type="text" class="form-control" name="aiPlanSumInsured"></td>' +
+            '<td class="col-1"><button type="button" class="btn btn-outline-danger" onclick="removeRow(this)"><i class="bi bi-trash3"></i></button></td>' +
+          '</tr>' +
+        '</tr>'
+      // Add new row
+      $(elementAppend).append(newRow)
+      criteriaObj = { header: 'ContractGroup', value: 'ประกันอุบัติเหตุ'}
+      JGetSelectOption(rowObj, criteriaObj)
+      break
+
+    // WP part --------------------
+    case POLICY_WP_PLAN:
+      newRow = 
+        '<tr>' +
+          '<tr class="col-12">' +
+            '<td class="col-6"><select class="form-select ' + element + '" name="' + element + '"></select></td>' +
+            '<td class="col-5"><input type="text" class="form-control" name="wpPlanSumInsured"></td>' +
+            '<td class="col-1"><button type="button" class="btn btn-outline-danger" onclick="removeRow(this)"><i class="bi bi-trash3"></i></button></td>' +
+          '</tr>' +
+        '</tr>'
+      // Add new row
+      $(elementAppend).append(newRow)
+      criteriaObj = { header: 'ContractGroup', value: 'ประกันยกเว้นเบี้ยประกัน'}
+      JGetSelectOption(rowObj, criteriaObj)
+      break
+
+    // Docs part --------------------
+    case POLICY_DOCS:
+      newRow = 
+        '<tr>' +
+          '<tr class="col-12">' +
+            '<td class="col-6">' +
+              '<input list="' + element + '" class="form-control ' + element + '" name="docsName" placeholder="ชื่อเอกสาร">' +
+              '<datalist id="' + element + '">' +
+              //   '<option value="1">One</option><option value="2">Two</option><option value="3">Three</option>' +
+              '</datalist>' +
+            '</td>' +
+            '<td class="col-5"><input type="file" class="form-control" name="docsFile"></td>' +
+            '<td class="col-1"><button type="button" class="btn btn-outline-danger" onclick="removeRow(this)"><i class="bi bi-trash3"></i></button></td>' +
+          '</tr>' +
+        '</tr>'
+      // Add new row
+      $(elementAppend).append(newRow)
+      JGetDatalistOption(rowObj, criteriaObj)
+      break
+  }
+}
+
+function removeRow(button) {
+  $(button).closest('tr').remove()
+}
+
+
+
+// function JAddRowSetOptionToSelect2(_dataObj) {
+//   const modalID = _dataObj.modalID
+//   const tableID = _dataObj.tableID
+//   const rowName = _dataObj.elements
+//   let option = _dataObj.options
+
+//   JInitialSelectElement(list)
+//   // const elementAttribute = '.' + rowName
+//   // Initialize Select2
+//   // option = [
+//   //   { id: "1", text: "Category 1" },
+//   //   { id: "2", text: "Category 2" },
+//   //   { id: "3", text: "Category 3" },
+//   // ]
+
+//   // // Element Inside/Outside modal
+//   // if (modalID) {
+//   //   // Element inside modal
+//   //   $(elementAttribute).select2({
+//   //     data: option,
+//   //     theme: 'bootstrap-5',
+//   //     width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+//   //     placeholder: $(this).data('placeholder'),
+//   //     allowClear: true,
+//   //     dropdownParent: $('#' + modalID)
+//   //   })
+//   // } else {
+//   //   // Element outside modal
+//   //   $(elementAttribute).select2({
+//   //     data: option,
+//   //     theme: 'bootstrap-5',
+//   //     width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+//   //     placeholder: $(this).data('placeholder'),
+//   //     allowClear: true,
+//   //     // minimumResultsForSearch: Infinity,
+//   //   })
+//   }
+
+
+//   // $(selectClass).select2({
+//   //   data: option,
+//   //   theme: 'bootstrap-5',
+//   //   width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+//   //   placeholder: $(this).data('placeholder'),
+//   //   allowClear: true,
+//   //   // Disable search box
+//   //   minimumResultsForSearch: Infinity,
+//   //   // For select inside modal fix problem
+//   //   dropdownParent: $(_modalID)
+//   // })
+// }
+
+// function addRow(_element) {
+//   const value = _element.value
+//   console.log('value:',value)
+//   const splitValue = value.split(':')
+//   console.log('splitValue:',splitValue)
+//   const modalID = '#' + splitValue[0]
+//   const tableID = '#' + splitValue[1]
+//   const selectElementName = splitValue[2]
+//   var newRow = 
+//     '<tr>' +
+//       '<tr class="col-12">' +
+//         '<td class="col-6"><select class="form-select ' + selectElementName + '" name="' + selectElementName + '"></select></td>' +
+//         '<td class="col-5"><input type="text" class="form-control" name="ciPlanSumInsured"></td>' +
+//         '<td class="col-1"><button type="button" class="btn btn-outline-danger" onclick="removeRow(this)"><i class="bi bi-trash3"></i></button></td>' +
+//       '</tr>' +
+//     '</tr>'
+
+//   $(tableID + ' tbody').append(newRow)
+
+//   // Reinitialize Select2
+//   JSetSelectAddRow(modalID, selectElementName)
+// }
+
+
+  
+  function JValidateFormPolicy(_formObj) {
+    // Get input
+    const code = _formObj.code.value.trim()
+    const nameTH = _formObj.nameTH.value.trim()
+    const nameEN = _formObj.nameEN.value.trim()
+    const premiumPaymentPeriod = _formObj.premiumPaymentPeriod.value.trim()
+    const premiumPaymentPeriodType = _formObj.premiumPaymentPeriodType.value
+    const protectionPeriod = _formObj.protectionPeriod.value.trim()
+    const protectionPeriodType = _formObj.protectionPeriodType.value
+    const contractType = _formObj.contractType.value
+    const contractGroup = _formObj.contractGroup.value
+    const taxDeduction = _formObj.taxDeduction.value
+    const taxDeductionType = _formObj.taxDeductionType.value
+    const insuranceCompany = _formObj.insuranceCompany.value
+    // const mode = _formObj.submitButton.value
+    if (code === '' || nameTH === '' || nameEN === '' || premiumPaymentPeriod === '' || premiumPaymentPeriodType === '' || protectionPeriod === '' || protectionPeriodType === '' || contractType === '' || contractGroup === '' || taxDeduction === '' || taxDeductionType === '' || insuranceCompany === '') {
+      SWAInfo(MSG_INPUT_FORM_ERROR)
+    } else {
+      ModalDisplay(MODAL_POLICY, false)
+      SWALoading()
+      JBeforeResponseFormSubmit(_formObj)
+    }
+  }
+
+  function JAddDataPolicy(_data) {
+    // Reset all form
+    const formID = 'mainContractForm'
+    JResetForm(formID)
+    document.getElementById('mainContractDataID').readOnly = true
+    // JAddList()
+    // Set action mode to submit-button
+    document.getElementById('mainContractSubmitButton').value = TEXT_ADD
+  }
+
+  function JViewDataMainContract(_data) {
+    document.getElementById('mainContractViewTitleName').innerHTML = _data.NameEN
+    document.getElementById('mainContractViewTitleDataID').innerHTML = _data.ContractID
+    document.getElementById('mainContractViewCode').innerHTML = _data.Code
+    document.getElementById('mainContractViewNameTH').innerHTML = _data.NameTH
+    document.getElementById('mainContractViewNameEN').innerHTML = _data.NameEN
+    // document.getElementById('mainContractViewPremiumPaymentPeriodType').innerHTML = _data.PremiumPaymentPeriodType
+    const premiumPaymentPeriod = _data.PremiumPaymentPeriodType + ' ' + _data.PremiumPaymentPeriod
+    document.getElementById('mainContractViewPremiumPaymentPeriod').innerHTML = premiumPaymentPeriod
+    // document.getElementById('mainContractViewProtectionPeriodType').innerHTML = _data.ProtectionPeriodType
+    const protectionPeriod = _data.ProtectionPeriodType + ' ' + _data.ProtectionPeriod
+    document.getElementById('mainContractViewProtectionPeriod').innerHTML = protectionPeriod
+    document.getElementById('mainContractViewContractType').innerHTML = _data.ContractType
+    document.getElementById('mainContractViewContractGroup').innerHTML = _data.ContractGroup
+    document.getElementById('mainContractViewTaxDeduction').innerHTML = _data.TaxDeduction
+    document.getElementById('mainContractViewTaxDeductionType').innerHTML = _data.TaxDeductionType
+    // document.getElementById('mainContractViewBrochure').innerHTML = _data.BrochureUrl
+    document.getElementById('mainContractViewBrochure').innerHTML = '<a href="' + _data.BrochureUrl + '"><i class="bi bi-floppy"></i> Brochure</a>'
+    document.getElementById('mainContractViewInsuranceCompany').innerHTML = _data.InsuranceCompany
+    document.getElementById('mainContractViewNote').innerHTML = _data.Note
+  }
+
+  function JEditDataPolicy(_data) {
+    document.getElementById('mainContractForm').reset()
+    document.getElementById('mainContractDataID').value = _data.ContractID
+    document.getElementById('mainContractCode').value = _data.Code
+    document.getElementById('mainContractNameTH').value = _data.NameTH
+    document.getElementById('mainContractNameEN').value = _data.NameEN
+    SetCheckedRadioButton('premiumPaymentPeriodType',_data.PremiumPaymentPeriodType)
+    document.getElementById('mainContractPremiumPaymentPeriod').value = _data.PremiumPaymentPeriod
+    SetCheckedRadioButton('protectionPeriodType',_data.ProtectionPeriodType)
+    document.getElementById('mainContractProtectionPeriod').value = _data.ProtectionPeriod
+    document.getElementById('mainContractContractType').value = _data.ContractType
+    document.getElementById('mainContractContractGroup').value = _data.ContractGroup
+    document.getElementById('mainContractTaxDeduction').value = _data.TaxDeduction
+    document.getElementById('mainContractTaxDeductionType').value = _data.TaxDeductionType
+    document.getElementById('mainContractInsuranceCompany').value = _data.InsuranceCompany
+    document.getElementById('mainContractNote').value = _data.Note
+    // Set action mode to submit-button
+    document.getElementById('mainContractSubmitButton').value = 'EDIT'
+  }
+
+// ***************************************************************************
+  //CREATE THE DATA TABLE
+  function JDataTablePolicy(_jsonData) {
+    const data = JSON.parse(_jsonData)
+    const state = data.state
+    const items = data.values
+    if (state) {
+      $(document).ready(function(){
+        $('#policyTable').DataTable({
+          destroy: true,
+          responsive: true,
+          data: items,
+          colReorder: true,
+          lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "ทั้งหมด"]],
+          order: [[0, "desc"]], 
+          sPaginationType: "full_numbers",
+          columns: [
+            { title: "ไอดี" },
+            { title: "เลขที่กรมธรรม์" },
+            { title: "ผู้เอาประกัน" },
+            { title: "งวดการชำระเบี้ย" },
+            { title: "กำหนดชำระเบี้ย"},
+            { title: "สถานะกรมธรรม์"},
+            { title: "จัดการข้อมูล",
+              render: function(data, type, row, meta) {
+                return '<div class="d-inline-flex gap-2">' +
+                  '<button type="button" class="btn btn-success" onclick="JViewData(this)" value="' + PROCESS_POLICY_R + ':' + row[0] + '"><i class="bi bi-eye"></i></button>' +
+								  '<button type="button" class="btn btn-primary" onclick="JEditData(this)" value="' + PROCESS_POLICY_CU + ':' + row[0] + '"><i class="bi bi-pencil"></i></button>' +
+                  '<button type="button" class="btn btn-danger" onclick="JDeleteData(this)" value="' + PROCESS_POLICY_D  + ':' + row[0] + '"><i class="bi bi-trash3"></i></button>' +
+                  '</div>'            
+            }}
+          ],
+          language: {
+            sProcessing: "กำลังดำเนินการ...",
+            sLengthMenu: "แสดง_MENU_ แถว",
+            sZeroRecords: "ไม่มีข้อมูล",
+            sInfo: "แสดง _START_ ถึง _END_ จาก _TOTAL_ แถว",
+            sInfoEmpty: "แสดง 0 ถึง 0 จาก 0 แถว",
+            sInfoFiltered: "(กรองข้อมูล _MAX_ ทุกแถว)",
+            sInfoPostFix: "",
+            sSearch: "ค้นหา:",
+            sUrl: "",
+            oPaginate: {
+              sFirst: "<< หน้าแรก",
+              sPrevious: "< ก่อนหน้า",
+              sNext: "ถัดไป >",
+              sLast: "หน้าสุดท้าย >>"
+            }
+          },
+        })
+      })
+    }
+  }
+
+</script>

@@ -1,0 +1,404 @@
+<script>
+  $(document).ready(function() {
+    JGetCoverageListHsPackage()
+  })
+
+
+
+// ******************************************************************************************************** //
+// HS plan section
+// ******************************************************************************************************** //
+
+// **************************************************** //
+// ตรวจสอบข้อมูล
+// **************************************************** //
+function JValidateFormPlan(_formObj) {
+  // เตรียมข้อมูลเพื่อตรวจสอบ
+  const dataObj = [
+    _formObj.code.value.trim(),
+    _formObj.nameTH.value.trim(),
+    _formObj.nameEN.value.trim(),
+    _formObj.premiumPaymentPeriod.value.trim(),
+    _formObj.premiumPaymentPeriodType.value,
+    _formObj.protectionPeriod.value.trim(),
+    _formObj.protectionPeriodType.value,
+    _formObj.contractType.value,
+    _formObj.contractGroup.value,
+    _formObj.taxDeduction.value,
+    _formObj.taxDeductionType.value,
+    _formObj.insurerID.value
+  ]
+  
+  // ตรวจสอบข้อมูล
+  if (JHasEmptyData(dataObj)) { // ข้อมูลไม่ถูกต้อง
+    SWAInfo(MSG_INPUT_FORM_ERROR) // แจ้งเตือนข้อผิดพลาด
+  } else { // ข้อมูลถูกต้อง
+    SWALoading() // แสดงแถบโหลด
+    JSaveData(_formObj) // บันทึกข้อมูล
+  }
+}
+
+
+
+// **************************************************** //
+// เพิ่มข้อมูล
+// **************************************************** //
+function JAddDataHsPlan(_data) {
+  const elementObj = [
+    { type: SET_ATTRIBUTE_READONLY, id: 'hsPlanDataID', value: true },
+    { type: SET_VALUE, id: 'hsPlanSubmitButton', value: MODE_ADD }
+  ]
+  JSetDataForm(elementObj)
+}
+
+
+
+// **************************************************** //
+// ดูข้อมูล
+// **************************************************** //
+function JViewDataHsPlan(_data) {
+  const premiumPaymentPeriod = _data.PremiumPaymentPeriodType + ' ' + _data.PremiumPaymentPeriod
+  const protectionPeriod = _data.ProtectionPeriodType + ' ' + _data.ProtectionPeriod
+  const brochureUrl = (_data.BrochureUrl !== '-') ? '<a href="' +  _data.BrochureUrl + '" target="_blank"><i class="bi bi-floppy"></i> Brochure</a>' : 'ไม่มี'
+  const elementObj = [
+    { type: SET_INNERHTML, id: 'hsPlanViewTitleName', value: _data.NameEN },
+    { type: SET_INNERHTML, id: 'hsPlanViewTitleDataID', value: _data.PlanID },
+    { type: SET_INNERHTML, id: 'hsPlanViewCode', value: _data.Code },
+    { type: SET_INNERHTML, id: 'hsPlanViewNameTH', value: _data.NameTH },
+    { type: SET_INNERHTML, id: 'hsPlanViewNameEN', value: _data.NameEN },
+    { type: SET_INNERHTML, id: 'hsPlanViewPremiumPaymentPeriod', value: premiumPaymentPeriod },
+    { type: SET_INNERHTML, id: 'hsPlanViewProtectionPeriod', value: protectionPeriod },
+    { type: SET_INNERHTML, id: 'hsPlanViewContractType', value: _data.ContractType },
+    { type: SET_INNERHTML, id: 'hsPlanViewContractGroup', value: _data.ContractGroup },
+    { type: SET_INNERHTML, id: 'hsPlanViewTaxDeduction', value: _data.TaxDeduction },
+    { type: SET_INNERHTML, id: 'hsPlanViewTaxDeductionType', value: _data.TaxDeductionType },
+    { type: SET_INNERHTML, id: 'hsPlanViewBrochure', value: brochureUrl },
+    { type: SET_INNERHTML, id: 'hsPlanViewInsurerName', value: _data.InsurerName },
+    { type: SET_INNERHTML, id: 'hsPlanViewNote', value: _data.Note }
+  ]
+  JSetDataForm(elementObj)
+}
+
+
+
+// **************************************************** //
+// แก้ไขข้อมูล
+// **************************************************** //
+function JEditDataHsPlan(_data) {
+  const elementObj = [
+    { type: SET_VALUE, id: 'hsPlanDataID', value: _data.PlanID },
+    { type: SET_VALUE, id: 'hsPlanCode', value: _data.Code },
+    { type: SET_VALUE, id: 'hsPlanNameTH', value: _data.NameTH },
+    { type: SET_VALUE, id: 'hsPlanNameEN', value: _data.NameEN },
+    { type: SET_RADIO, id: 'premiumPaymentPeriodType', value: _data.PremiumPaymentPeriodType },
+    { type: SET_VALUE, id: 'hsPlanPremiumPaymentPeriod', value: _data.PremiumPaymentPeriod },
+    { type: SET_RADIO, id: 'protectionPeriodType', value: _data.ProtectionPeriodType },
+    { type: SET_VALUE, id: 'hsPlanProtectionPeriod', value: _data.ProtectionPeriod },
+    { type: SET_VALUE_SELECT2, id: 'hsPlanContractType', value: _data.ContractType },
+    { type: SET_VALUE_SELECT2, id: 'hsPlanContractGroup', value: _data.ContractGroup },
+    { type: SET_VALUE_SELECT2, id: 'hsPlanTaxDeduction', value: _data.TaxDeduction },
+    { type: SET_VALUE_SELECT2, id: 'hsPlanTaxDeductionType', value: _data.TaxDeductionType },
+    { type: SET_VALUE_SELECT2, id: 'hsPlanInsurerID', value: _data.InsurerID },
+    { type: SET_VALUE, id: 'hsPlanNote', value: _data.Note },
+    { type: SET_VALUE, id: 'hsPlanSubmitButton', value: MODE_EDIT }
+  ]
+  JSetDataForm(elementObj)
+}
+
+// ***************************************************************************
+// Datables Hs plan
+// ***************************************************************************
+function JDataTableHsPlan(_data) {
+  // แปลงข้อมูล json เป็นอ็อบเจ็ค
+  const state = _data.state
+  const items = _data.values
+
+  // ตรวจสอบสถานะข้อมูล
+  if (state) {
+    $(document).ready(function(){
+      $('#hsPlanTable').DataTable({
+        destroy: true,
+        responsive: true,
+        data: items,
+        colReorder: true,
+        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "ทั้งหมด"]],
+        order: [[0, "desc"]], 
+        sPaginationType: "full_numbers",
+        columns: [
+          { title: "ไอดี" },
+          { title: "ชื่อย่อ" },
+          { title: "ชื่อแผน(ไทย)" },
+          { title: "ชื่อแผน(อังกฤษ)" },
+          // { title: "ระยะเวลาชำระเบี้ย"},
+          // { title: "ระยะเวลาคุ้มครอง"},
+          // { title: "รูปแบบประกัน"},
+          { title: "เอกสาร",
+            render: function(data, type, row, meta) {
+              return (data !== '-') ? 
+                '<div class="btn"><a href="' + data + '" target="_blank" class="btn btn-success"><i class="bi bi-envelope-open"></i></a><div>' : 
+                '<div class="btn" disabled><a href="#" class="btn btn-danger"><i class="bi bi-file-earmark-x"></i></a><div>'
+              //  <a href="' + data + '" download="pdf">Download</a> +
+              //  bi-cloud-download    bi-eye    bi-book    bi-envelope-open
+              //  <div class="btn-group"><a href="#" class="btn btn-success">Link</a></div>
+            }},
+          { title: "จัดการข้อมูล",
+            render: function(data, type, row, meta) {
+              return '<div class="d-inline-flex gap-2">' +
+                '<button type="button" class="btn btn-success" onclick="JViewData(this)" value="' + MODULE_HS_PLAN + ':' + row[0] + '"><i class="bi bi-eye"></i></button>' +
+								'<button type="button" class="btn btn-primary" onclick="JEditData(this)" value="' + MODULE_HS_PLAN + ':' + row[0] + '"><i class="bi bi-pencil"></i></button>' +
+                '<button type="button" class="btn btn-danger" onclick="JDeleteData(this)" value="' + MODULE_HS_PLAN  + ':' + row[0] + '"><i class="bi bi-trash3"></i></button>' +
+                '</div>'      
+          }}
+        ],
+        language: {
+          sProcessing: "กำลังดำเนินการ...",
+          sLengthMenu: "แสดง _MENU_ แถว",
+          sZeroRecords: "ไม่มีข้อมูล",
+          sInfo: "แสดง _START_ ถึง _END_ จาก _TOTAL_ แถว",
+          sInfoEmpty: "แสดง 0 ถึง 0 จาก 0 แถว",
+          sInfoFiltered: "(กรองข้อมูล _MAX_ ทุกแถว)",
+          sInfoPostFix: "",
+          sSearch: "ค้นหา:",
+          sUrl: "",
+          oPaginate: {
+            sFirst: "<< หน้าแรก",
+            sPrevious: "< ก่อนหน้า",
+            sNext: "ถัดไป >",
+            sLast: "หน้าสุดท้าย >>"
+          }
+        },
+      })
+    })
+  }
+}
+
+
+
+// ******************************************************************************************************** //
+// HS package section
+// ******************************************************************************************************** //
+
+// **************************************************** //
+// อ่านข้อมูลผลประโยชน์ความคุ้มครอง (อัตโนมัติ เมื่อโหลดเอกสารพร้อม)
+// **************************************************** //
+function JGetCoverageListHsPackage() {
+  const tableID = 'hsPackageTable' // 
+  const elementAppend = '#' + tableID + ' tbody' //
+  google.script.run.withSuccessHandler(function(_responseJson) {
+    // 
+    const response = JSON.parse(_responseJson)
+    const state = response.state
+    const message = response.message
+    const coverages = response.values
+    
+    // 
+    coverages.forEach(list => {
+      let coverageID = list.CoverageID
+      let topItem = list.TopItem
+      let groupNo = list.GroupNo
+      let item = list.Item
+      let needValue = list.NeedValue
+      let needValueID = list.NeedValueID
+      // let needSummary = list.NeedSummary
+      let newRow = null
+
+      // 
+      if (topItem !== '-') { // หัวข้อใหญ่
+        if (needValue === 'YES') { // ต้องกรอกวงเงิน
+          newRow = 
+            '<tr>' +
+            '<td colspan="2"><span id="' + coverageID + '">' + topItem + '</span></td>' +
+            '<td>' +
+            '<input type="number" class="form-control" id="' + needValueID + '" placeholder="วงเงินความคุ้มครอง" name="limit" value="2000" required />' +
+            '</td>' +
+            '</tr>'
+        } else { // ไม่ต้องกรอกวงเงิน
+          newRow = '<tr><th colspan="3">' + topItem + '</th></tr>'
+        }
+      } else { // หัวข้อย่อย
+        if (needValue === 'YES') { // ต้องกรอกวงเงิน
+          newRow = 
+            '<tr>' +
+            '<td><span id="' + coverageID + '">' + groupNo + '</span></td>' +
+            '<td><span>' + item + '</span></td>' +
+            '<td>' +
+            '<input type="number" class="form-control" id="' + needValueID + '" placeholder="วงเงินความคุ้มครอง" name="limit" value="1000" required />' +
+            '</td>' +
+            '</tr>'
+        } else { // ไม่ต้องกรอกวงเงิน
+          newRow = 
+            '<tr>' +
+            '<td>' + groupNo + '</th>' +
+            '<td colspan="2"><span>' + item + '</span></td>' +
+            '</tr>'
+        }
+      }
+      
+      $(elementAppend).append(newRow) // เพิ่มแถว
+    })
+  }).GetCoverageListHsPackage()
+}
+
+// **************************************************** //
+// ตรวจสอบข้อมูล
+// **************************************************** //
+function JValidateFormHsPackage(_formObj) {
+  // ตรวจสอบโมดูล
+    const module = _formObj.formProcess.value
+    const running = JRunningModule(module)
+    const formID = module + FORM
+
+  const form = document.getElementById(formID)
+  const selectors = form.querySelectorAll('[name="limit"]')
+  let dataObj = []
+  selectors.forEach(function(selector) {
+    dataObj.push(selector.value.trim())
+  })
+  console.log('button:', _formObj.submitButton.value)
+
+  const hasEmpty = JHasEmptyData(dataObj)
+  console.log('has empty >', (hasEmpty)?'yes':'no')
+
+  // ตรวจสอบข้อมูล
+  if (JHasEmptyData(dataObj)) { // ข้อมูลไม่ถูกต้อง
+    SWAInfo(MSG_INPUT_FORM_ERROR) // แจ้งเตือนข้อผิดพลาด
+  } else { // ข้อมูลถูกต้อง
+    SWALoading() // แสดงแถบโหลด
+    JSaveData(_formObj) // บันทึกข้อมูล
+  }
+}
+
+
+
+// **************************************************** //
+// เพิ่มข้อมูล
+// **************************************************** //
+function JAddDataHsPackage(_data) {
+  // JResetForm(FORM_HS_PACKAGE)
+  const elementObj = [
+    { type: SET_ATTRIBUTE_READONLY, id: 'hsPackageDataID', value: true },
+    { type: SET_VALUE, id: 'hsPackageSubmitButton', value: MODE_ADD }
+  ]
+  JSetDataForm(elementObj)
+}
+
+
+
+// **************************************************** //
+// ดูข้อมูล
+// **************************************************** //
+function JViewDataHsPackage(_data) {
+  const premiumPaymentPeriod = _data.PremiumPaymentPeriodType + ' ' + _data.PremiumPaymentPeriod
+  const protectionPeriod = _data.ProtectionPeriodType + ' ' + _data.ProtectionPeriod
+  const brochureUrl = (_data.BrochureUrl !== '-') ? '<a href="' +  _data.BrochureUrl + '" target="_blank"><i class="bi bi-floppy"></i> Brochure</a>' : 'ไม่มี'
+  const elementObj = [
+    { type: SET_INNERHTML, id: 'hsPlanViewTitleName', value: _data.NameEN },
+    { type: SET_INNERHTML, id: 'hsPlanViewTitleDataID', value: _data.ContractID },
+    { type: SET_INNERHTML, id: 'hsPlanViewCode', value: _data.Code },
+    { type: SET_INNERHTML, id: 'hsPlanViewNameTH', value: _data.NameTH },
+    { type: SET_INNERHTML, id: 'hsPlanViewNameEN', value: _data.NameEN },
+    { type: SET_INNERHTML, id: 'hsPlanViewPremiumPaymentPeriod', value: premiumPaymentPeriod },
+    { type: SET_INNERHTML, id: 'hsPlanViewProtectionPeriod', value: protectionPeriod },
+    { type: SET_INNERHTML, id: 'hsPlanViewContractType', value: _data.ContractType },
+    { type: SET_INNERHTML, id: 'hsPlanViewContractGroup', value: _data.ContractGroup },
+    { type: SET_INNERHTML, id: 'hsPlanViewTaxDeduction', value: _data.TaxDeduction },
+    { type: SET_INNERHTML, id: 'hsPlanViewTaxDeductionType', value: _data.TaxDeductionType },
+    { type: SET_INNERHTML, id: 'hsPlanViewBrochure', value: brochureUrl },
+    { type: SET_INNERHTML, id: 'hsPlanViewInsurerName', value: _data.InsurerName },
+    { type: SET_INNERHTML, id: 'hsPlanViewNote', value: _data.Note }
+  ]
+  JSetDataForm(elementObj)
+}
+
+
+
+// **************************************************** //
+// ดูข้อมูล
+// **************************************************** //
+function JEditDataHsPackage(_data) {
+  const elementObj = [
+    { type: SET_VALUE, id: 'hsPlanDataID', value: _data.PlanID },
+    { type: SET_VALUE, id: 'hsPlanCode', value: _data.Code },
+    { type: SET_VALUE, id: 'hsPlanNameTH', value: _data.NameTH },
+    { type: SET_VALUE, id: 'hsPlanNameEN', value: _data.NameEN },
+    { type: SET_RADIO, id: 'premiumPaymentPeriodType', value: _data.PremiumPaymentPeriodType },
+    { type: SET_VALUE, id: 'hsPlanPremiumPaymentPeriod', value: _data.PremiumPaymentPeriod },
+    { type: SET_RADIO, id: 'protectionPeriodType', value: _data.ProtectionPeriodType },
+    { type: SET_VALUE, id: 'hsPlanProtectionPeriod', value: _data.ProtectionPeriod },
+    { type: SET_VALUE_SELECT2, id: 'hsPlanContractType', value: _data.ContractType },
+    { type: SET_VALUE_SELECT2, id: 'hsPlanContractGroup', value: _data.ContractGroup },
+    { type: SET_VALUE_SELECT2, id: 'hsPlanTaxDeduction', value: _data.TaxDeduction },
+    { type: SET_VALUE_SELECT2, id: 'hsPlanTaxDeductionType', value: _data.TaxDeductionType },
+    { type: SET_VALUE_SELECT2, id: 'hsPlanInsurerID', value: _data.InsurerID },
+    { type: SET_VALUE, id: 'hsPlanNote', value: _data.Note },
+    { type: SET_VALUE, id: 'hsPlanSubmitButton', value: MODE_EDIT }
+  ]
+  JSetDataForm(elementObj)
+}
+
+
+// ***************************************************************************
+// Datables Hs package
+// ***************************************************************************
+function JDataTableHsPackage(_data) {
+  // แปลงข้อมูล json เป็นอ็อบเจ็ค
+  // const data = JSON.parse(_jsonData)
+  const state = _data.state
+  const items = _data.values
+  console.log('items;',items)
+
+  // ตรวจสอบสถานะข้อมูล
+  if (state) {
+    $(document).ready(function(){
+      $('#hsPackageTable').DataTable({
+        destroy: true,
+        responsive: true,
+        data: items,
+        colReorder: true,
+        lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "ทั้งหมด"]],
+        order: [[0, "desc"]], 
+        sPaginationType: "full_numbers",
+        columns: [
+          { title: "ไอดี" },
+          { title: "แพ็คเกจ" },
+          { title: "บริษัทประกัน" },
+          // { title: "ชื่อภาษาอังกฤษ" },
+          // { title: "ระยะเวลาชำระเบี้ย"},
+          // { title: "ระยะเวลาคุ้มครอง"},
+          // { title: "รูปแบบประกัน"},
+          // { title: "เอกสารประกอบ",
+          //   render: function(data, type, row, meta) {
+          //   return '<img src="' + data + '" class="img-fluid rounded-circle mb-2 img-3x" />'
+          // }},
+          { title: "จัดการข้อมูล",
+            render: function(data, type, row, meta) {
+              return '<div class="d-inline-flex gap-2">' +
+                '<button type="button" class="btn btn-success" onclick="JViewData(this)" value="' + MODULE_HS_PACKAGE + ':' + row[0] + '"><i class="bi bi-eye"></i></button>' +
+								'<button type="button" class="btn btn-primary" onclick="JEditData(this)" value="' + MODULE_HS_PACKAGE + ':' + row[0] + '"><i class="bi bi-pencil"></i></button>' +
+                '<button type="button" class="btn btn-danger" onclick="JDeleteData(this)" value="' + MODULE_HS_PACKAGE  + ':' + row[0] + '"><i class="bi bi-trash3"></i></button>' +
+                '</div>'      
+          }}
+        ],
+        language: {
+          sProcessing: "กำลังดำเนินการ...",
+          sLengthMenu: "แสดง _MENU_ แถว",
+          sZeroRecords: "ไม่มีข้อมูล",
+          sInfo: "แสดง _START_ ถึง _END_ จาก _TOTAL_ แถว",
+          sInfoEmpty: "แสดง 0 ถึง 0 จาก 0 แถว",
+          sInfoFiltered: "(กรองข้อมูล _MAX_ ทุกแถว)",
+          sInfoPostFix: "",
+          sSearch: "ค้นหา:",
+          sUrl: "",
+          oPaginate: {
+            sFirst: "<< หน้าแรก",
+            sPrevious: "< ก่อนหน้า",
+            sNext: "ถัดไป >",
+            sLast: "หน้าสุดท้าย >>"
+          }
+        },
+      })
+    })
+  }
+}
+
+</script>

@@ -1,0 +1,241 @@
+<script>
+  // **************************************************** //
+// เพิ่มข้อมูล
+// **************************************************** //
+  function JAddDataMainContract() {
+    // JModalShow(MODAL_MAIN_CONTRACT) // แสดงโมดัล
+
+    // รีเซ็ทและกำหนดค่าเริ่มต้นฟอร์ม
+    // JResetForm(FORM_MAIN_CONTRACT)
+    const elementObj = [
+      { type: SET_ATTRIBUTE_READONLY, id: 'mainContractDataID', value: true },
+      { type: SET_VALUE, id: 'mainContractSubmitButton', value: MODE_ADD }
+    ]
+    JSetDataForm(elementObj)
+  }
+
+
+
+// **************************************************** //
+// ตรวจสอบข้อมูล
+// **************************************************** //
+  function JValidateFormMainContract(_formObj) {
+    // เตรียมข้อมูลเพื่อตรวจสอบ
+    const dataObj = [
+      _formObj.code.value.trim(),
+      _formObj.nameTH.value.trim(),
+      _formObj.nameEN.value.trim(),
+      _formObj.premiumPaymentPeriod.value.trim(),
+      _formObj.premiumPaymentPeriodType.value,
+      _formObj.protectionPeriod.value.trim(),
+      _formObj.protectionPeriodType.value,
+      _formObj.contractType.value,
+      _formObj.contractGroup.value,
+      _formObj.taxDeduction.value,
+      _formObj.taxDeductionType.value,
+      _formObj.insurerID.value
+    ]
+  
+    // ตรวจสอบข้อมูล
+    if (JHasEmptyData(dataObj)) { // ข้อมูลไม่ถูกต้อง
+      SWAInfo(MSG_INPUT_FORM_ERROR) // แจ้งเตือนข้อผิดพลาด
+    } else { // ข้อมูลถูกต้อง
+      // JModalHide(MODAL_MAIN_CONTRACT) // ซ่อนโมดัล
+      SWALoading() // แสดงแถบโหลด
+      JSaveData(_formObj) // บันทึกข้อมูล
+    }
+  }
+
+
+
+// **************************************************** //
+// ดูข้อมูล
+// **************************************************** //
+  function JViewDataMainContract(_data) {
+    // // อ่านข้อมูลเพิ่มเติม บริษัทรับประกันภัย
+    // // let insurerName = null
+    // const dataObj = {
+    //   sheetName: SHEET_INSURERS,
+    //   dataID: _data.InsurerID
+    // } // เตรียมข้อมูลส่ง gas
+    // // console.log('dataObj:', dataObj)
+
+    // // อ่านข้อมูลจากชีท
+    // google.script.run.withSuccessHandler(function (_responseJson) {
+    //   // แปลงข้อมูล json เป็นอ็อบเจ็ค
+    //   const response = JSON.parse(_responseJson)
+    //   const state = response.state
+    //   const message = response.message
+    //   const insurerInfo = response.values
+    //   // console.log(response)
+
+      // if (state) {
+        // const insurerName = insurerInfo.Name
+        const premiumPaymentPeriod = _data.PremiumPaymentPeriodType + ' ' + _data.PremiumPaymentPeriod
+        const protectionPeriod = _data.ProtectionPeriodType + ' ' + _data.ProtectionPeriod
+        const elementObj = [
+          { type: SET_INNERHTML, id: 'mainContractViewTitleName', value: _data.NameEN },
+          { type: SET_INNERHTML, id: 'mainContractViewTitleDataID', value: _data.PlanID },
+          { type: SET_INNERHTML, id: 'mainContractViewCode', value: _data.Code },
+          { type: SET_INNERHTML, id: 'mainContractViewNameTH', value: _data.NameTH },
+          { type: SET_INNERHTML, id: 'mainContractViewNameEN', value: _data.NameEN },
+          { type: SET_INNERHTML, id: 'mainContractViewPremiumPaymentPeriod', value: premiumPaymentPeriod },
+          { type: SET_INNERHTML, id: 'mainContractViewProtectionPeriod', value: protectionPeriod },
+          { type: SET_INNERHTML, id: 'mainContractViewContractType', value: _data.ContractType },
+          { type: SET_INNERHTML, id: 'mainContractViewContractGroup', value: _data.ContractGroup },
+          { type: SET_INNERHTML, id: 'mainContractViewTaxDeduction', value: _data.TaxDeduction },
+          { type: SET_INNERHTML, id: 'mainContractViewTaxDeductionType', value: _data.TaxDeductionType },
+          { type: SET_INNERHTML, id: 'mainContractViewBrochure', value: '<a href="' + _data.BrochureUrl + '"><i class="bi bi-floppy"></i> Brochure</a>' },
+          { type: SET_INNERHTML, id: 'mainContractViewInsurerName', value: _data.InsurerName },
+          { type: SET_INNERHTML, id: 'mainContractViewNote', value: _data.Note }
+        ]
+        JSetDataForm(elementObj)
+        // Swal.close() // ปิด sweet alert
+        // JModalShow(_modal) // แสดงโมดัล
+    //   } else {
+    //     SWAError(message)
+    //   }
+    // }).GetItem(JSON.stringify(dataObj))
+  }
+
+
+
+  // function JViewDataMainContract(_modal, _data) {
+  //   // อ่านข้อมูลเพิ่มเติม บริษัทรับประกันภัย
+  //   // let insurerName = null
+  //   const dataObj = {
+  //     sheetName: SHEET_INSURERS,
+  //     dataID: _data.InsurerID
+  //   } // เตรียมข้อมูลส่ง gas
+  //   // console.log('dataObj:', dataObj)
+
+  //   // อ่านข้อมูลจากชีท
+  //   google.script.run.withSuccessHandler(function (_responseJson) {
+  //     // แปลงข้อมูล json เป็นอ็อบเจ็ค
+  //     const response = JSON.parse(_responseJson)
+  //     const state = response.state
+  //     const message = response.message
+  //     const insurerInfo = response.values
+  //     // console.log(response)
+
+  //     if (state) {
+  //       const insurerName = insurerInfo.Name
+  //       const premiumPaymentPeriod = _data.PremiumPaymentPeriodType + ' ' + _data.PremiumPaymentPeriod
+  //       const protectionPeriod = _data.ProtectionPeriodType + ' ' + _data.ProtectionPeriod
+  //       const elementObj = [
+  //         { type: SET_INNERHTML, id: 'mainContractViewTitleName', value: _data.NameEN },
+  //         { type: SET_INNERHTML, id: 'mainContractViewTitleDataID', value: _data.PlanID },
+  //         { type: SET_INNERHTML, id: 'mainContractViewCode', value: _data.Code },
+  //         { type: SET_INNERHTML, id: 'mainContractViewNameTH', value: _data.NameTH },
+  //         { type: SET_INNERHTML, id: 'mainContractViewNameEN', value: _data.NameEN },
+  //         { type: SET_INNERHTML, id: 'mainContractViewPremiumPaymentPeriod', value: premiumPaymentPeriod },
+  //         { type: SET_INNERHTML, id: 'mainContractViewProtectionPeriod', value: protectionPeriod },
+  //         { type: SET_INNERHTML, id: 'mainContractViewContractType', value: _data.ContractType },
+  //         { type: SET_INNERHTML, id: 'mainContractViewContractGroup', value: _data.ContractGroup },
+  //         { type: SET_INNERHTML, id: 'mainContractViewTaxDeduction', value: _data.TaxDeduction },
+  //         { type: SET_INNERHTML, id: 'mainContractViewTaxDeductionType', value: _data.TaxDeductionType },
+  //         { type: SET_INNERHTML, id: 'mainContractViewBrochure', value: '<a href="' + _data.BrochureUrl + '"><i class="bi bi-floppy"></i> Brochure</a>' },
+  //         { type: SET_INNERHTML, id: 'mainContractViewInsurerName', value: insurerName },
+  //         { type: SET_INNERHTML, id: 'mainContractViewNote', value: _data.Note }
+  //       ]
+  //       JSetDataForm(elementObj)
+  //       Swal.close() // ปิด sweet alert
+  //       JModalShow(_modal) // แสดงโมดัล
+  //     } else {
+  //       SWAError(message)
+  //     }
+  //   }).GetItem(JSON.stringify(dataObj))
+  // }
+
+
+
+// **************************************************** //
+// แก้ไขข้อมูล
+// **************************************************** //
+  function JEditDataMainContract(_data) {
+    // JResetForm(FORM_MAIN_CONTRACT)
+    const elementObj = [
+      { type: SET_VALUE, id: 'mainContractDataID', value: _data.PlanID },
+      { type: SET_VALUE, id: 'mainContractCode', value: _data.Code },
+      { type: SET_VALUE, id: 'mainContractNameTH', value: _data.NameTH },
+      { type: SET_VALUE, id: 'mainContractNameEN', value: _data.NameEN },
+      { type: SET_RADIO, id: 'premiumPaymentPeriodType', value: _data.PremiumPaymentPeriodType },
+      { type: SET_VALUE, id: 'mainContractPremiumPaymentPeriod', value: _data.PremiumPaymentPeriod },
+      { type: SET_RADIO, id: 'protectionPeriodType', value: _data.ProtectionPeriodType },
+      { type: SET_VALUE, id: 'mainContractProtectionPeriod', value: _data.ProtectionPeriod },
+      { type: SET_VALUE_SELECT2, id: 'mainContractContractType', value: _data.ContractType },
+      { type: SET_VALUE_SELECT2, id: 'mainContractContractGroup', value: _data.ContractGroup },
+      { type: SET_VALUE_SELECT2, id: 'mainContractTaxDeduction', value: _data.TaxDeduction },
+      { type: SET_VALUE_SELECT2, id: 'mainContractTaxDeductionType', value: _data.TaxDeductionType },
+      { type: SET_VALUE_SELECT2, id: 'mainContractInsurerID', value: _data.InsurerID },
+      { type: SET_VALUE, id: 'mainContractNote', value: _data.Note },
+      { type: SET_VALUE, id: 'mainContractSubmitButton', value: MODE_EDIT }
+    ]
+    JSetDataForm(elementObj)
+  }
+
+
+
+// **************************************************** //
+// แสดงข้อมูลบน Datatables
+// **************************************************** //
+  function JDataTableMainContract(_data) {
+    // แปลงข้อมูล json เป็นอ็อบเจ็ค
+    // const data = JSON.parse(_jsonData)
+    const state = _data.state
+    const items = _data.values
+
+    // ตรวจสอบสถานะข้อมูล
+    if (state) {
+      $(document).ready(function(){
+        $('#mainContractTable').DataTable({
+          destroy: true,
+          responsive: true,
+          data: items,
+          colReorder: true,
+          lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "ทั้งหมด"]],
+          order: [[0, "desc"]], 
+          sPaginationType: "full_numbers",
+          columns: [
+            { title: "ไอดี" },
+            { title: "ชื่อย่อ" },
+            { title: "ชื่อแผน(ไทย)" },
+            { title: "ชื่อแผน(อังกฤษ)" },
+            // { title: "ระยะเวลาชำระเบี้ย"},
+            // { title: "ระยะเวลาคุ้มครอง"},
+            // { title: "รูปแบบประกัน"},
+            { title: "เอกสารประกอบ",
+              render: function(data, type, row, meta) {
+                return '<img src="' + data + '" class="img-fluid rounded-circle mb-2 img-3x" />'
+            }},
+            { title: "จัดการข้อมูล",
+              render: function(data, type, row, meta) {
+                return '<div class="d-inline-flex gap-2">' +
+                  '<button type="button" class="btn btn-success" onclick="JViewData(this)" value="' + MODULE_MAIN_CONTRACT + ':' + row[0] + '"><i class="bi bi-eye"></i></button>' +
+								  '<button type="button" class="btn btn-primary" onclick="JEditData(this)" value="' + MODULE_MAIN_CONTRACT + ':' + row[0] + '"><i class="bi bi-pencil"></i></button>' +
+                  '<button type="button" class="btn btn-danger" onclick="JDeleteData(this)" value="' + MODULE_MAIN_CONTRACT  + ':' + row[0] + '"><i class="bi bi-trash3"></i></button>' +
+                  '</div>'            
+            }}
+          ],
+          language: {
+            sProcessing: "กำลังดำเนินการ...",
+            sLengthMenu: "แสดง _MENU_ แถว",
+            sZeroRecords: "ไม่มีข้อมูล",
+            sInfo: "แสดง _START_ ถึง _END_ จาก _TOTAL_ แถว",
+            sInfoEmpty: "แสดง 0 ถึง 0 จาก 0 แถว",
+            sInfoFiltered: "(กรองข้อมูล _MAX_ ทุกแถว)",
+            sInfoPostFix: "",
+            sSearch: "ค้นหา:",
+            sUrl: "",
+            oPaginate: {
+              sFirst: "<< หน้าแรก",
+              sPrevious: "< ก่อนหน้า",
+              sNext: "ถัดไป >",
+              sLast: "หน้าสุดท้าย >>"
+            }
+          },
+        })
+      })
+    }
+  }
+</script>

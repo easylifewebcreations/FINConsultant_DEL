@@ -1,0 +1,349 @@
+<!-- Main Datatables start -->
+<div class="col-12">
+  <div class="card mb-4">
+
+    <!-- Card header start -->
+    <div class="card-header">
+      <div class="d-flex">
+        <h4 class="card-title me-auto">ลูกค้า</h4>
+
+        <!-- Button Add start -->
+        <div class="me-2">
+          <button type="button" class="btn btn-outline-primary" onclick="JModalSearchShow(this)" value='customer'><i class="bi bi-search"></i> ค้นหา </button>
+        </div>
+
+        <div class="me-2">
+          <button type="button" class="btn btn-outline-warning" onclick="JGetAllItems(this)" value="customer"><i class="bi bi-book"></i> ข้อมูลทั้งหมด </button>
+        </div>
+
+        <div>
+          <button type="button" class="btn btn-success" onclick="JAddData(this)" value="customer"><i class="bi bi-person-add"></i> เพิ่มข้อมูล </button>
+        </div>
+        <!-- Button Add end -->
+
+      </div>
+    </div>
+    <!-- Card header end -->
+
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table align-middle table-hover m-0" id="customersTable"></table>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- Main Datatables end -->
+
+
+
+<!-- ------------------------------------ -->
+<!-- MODAL: Search Customer
+<!-- ------------------------------------ -->
+<div class="modal fade" id="customerSearchModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="customerSearchModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="customerSearchModalLabel">ลูกค้า</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <!-- Modal body start -->
+      <div class="modal-body">
+        <!-- Card start -->
+        <div class="card">
+          <div class="card-body">
+
+            <!-- Form start -->
+            <form role="search" id="customerSearchForm" onsubmit="JSearchData(this)">
+              <input type="hidden" id="customerSearch" name="search" value="customer">
+
+              <div class="login-form">
+
+                <div class="row">
+                  <div class="col-xl-12 col-12">
+                    <div class="row">
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ชื่อ</label>
+                          <input type="text" class="form-control" placeholder="ชื่อ" id="customerSearchFirstname" name="searchFirstname" />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">นามสกุล</label>
+                          <input type="text" class="form-control" placeholder="นามสกุล" id="customerSearchLastname" name="searchLastname" />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ชื่อเล่น</label>
+                          <input type="text" class="form-control" placeholder="ชื่อเล่น" id="customerSearchNickname" name="searchNickname" />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">วันเกิด</label>
+                          <input type="date" class="form-control" id="customerSearchBirthday" name="searchBirthday" />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">เพศ</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="customerSearchSex" name="searchSex" ></select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <div class="m-0">
+                            <label class="form-label">สถานภาพ</label>
+                            <select class="form-select" data-placeholder="โปรดเลือก" id="customerSearchMaritalStatus" name="searchMaritalStatus" ></select>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" id="customerSearchSubmitButton" name="submitButton" value=""><i class="bi bi-search"></i> ค้นหา </button>
+        <button type="button" class="btn btn-danger" id="customerSearchResetButton" name="resetButton" onclick="JResetFormButtonReset(this)" value="customerSearchForm"><i class="bi bi-eraser"></i> ล้างข้อมูล </button>
+      </div>
+
+      </form>
+      <!-- Form end -->
+
+    </div>
+  </div>
+</div>
+
+
+
+<!-- --------------------------- -->
+<!-- MODAL: CREATE & UPDATE CUSTOMER
+<!-- --------------------------- -->
+<div class="modal fade" id="customerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="customerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="customerModalLabel">ลูกค้า</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <!-- Modal body start -->
+      <div class="modal-body">
+        <!-- Card start -->
+        <div class="card">
+          <div class="card-body">
+
+            <div class="text-center mb-2">
+              <p id="customerProfilePicture"></p>
+            </div>
+
+            <!-- Form start -->
+            <form class="needs-validation" id="customerForm" onsubmit="JFormSubmit(this)" novalidate>
+              <input type="hidden" id="customerFormProcess" name="formProcess" value="customer">
+              <div class="login-form">
+
+                <div class="row">
+                  <div class="col-xl-12 col-12">
+                    <div class="row">
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ไอดีลูกค้า</label>
+                          <input type="text" class="form-control" id="customerDataID" name="dataID" value="หมายเลขไอดี(อัตโนมัติ)" readonly />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">คำนำหน้า</label>
+                          <select class="form-select" data-placeholder="โปรดเลือก" id="customerTitles" name="titles" required></select>
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ชื่อ</label>
+                          <input type="text" class="form-control" placeholder="ชื่อ" id="customerFirstname" name="firstname" value="firstname" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">นามสกุล</label>
+                          <input type="text" class="form-control" placeholder="นามสกุล" id="customerLastname" name="lastname" value="lastname" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ชื่อเล่น</label>
+                          <input type="text" class="form-control" placeholder="ชื่อเล่น" id="customerNickname" name="nickname" value="nickname" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">เพศ</label>
+                          <select class="form-select" data-placeholder="โปรดเลือก" id="customerSex" name="sex" required></select>
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">รูปโปรไฟล์</label>
+                          <input type="file" class="form-control" id="customerProfilePicture" name="profilePicture" accept="image/png, image/jpg, image/jpeg" />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">วันเกิด</label>
+                          <input type="date" class="form-control" placeholder="วันเกิด" id="customerBirthday" name="birthday" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">ที่อยู่</label>
+                          <input type="text" class="form-control" placeholder="ที่อยู่" id="customerAddress" name="address" />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">มือถือ</label>
+                          <input type="text" class="form-control" placeholder="มือถือ" id="customerMobile" name="mobile" value="0801234567" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">อีเมล</label>
+                          <input type="email" class="form-control" placeholder="อีเมล" id="customerEmail" name="email" value="email@mail.com" required />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">Facebook</label>
+                          <input type="text" class="form-control" placeholder="Facebook" id="customerFacebook" name="facebook" />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">Instagram</label>
+                          <input type="text" class="form-control" placeholder="Instagram" id="customerInstagram" name="instagram" />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">Line</label>
+                          <input type="text" class="form-control" placeholder="Line" id="customerLine" name="line" />
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label">Tiktok</label>
+                          <input type="text" class="form-control" placeholder="Tiktok" id="customerTiktok" name="tiktok" />
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" id="customerSubmitButton" name="submitButton"><i class="bi bi-floppy"></i> บันทึก</button>
+        <button type="button" class="btn btn-danger" id="customerResetButton" name="resetButton" onclick="JResetFormButtonReset(this)" value="customerForm"><i class="bi bi-eraser"></i> ล้างข้อมูล </button>
+      </div>
+
+      </form>
+      <!-- Form end -->
+
+    </div>
+  </div>
+</div>
+
+
+
+<!-- -------------------------------- -->
+<!-- MODAL: VIEW INFORMATION CUSTOMER -->
+<!-- -------------------------------- -->
+<div class="modal fade" id="customerViewModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="customerViewLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="customerViewLabel">ลูกค้า</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal body start -->
+      <div class="modal-body">
+        <!-- Card start -->
+        <div class="card">
+          <div class="card-body">
+
+            <div class="text-center mb-4">
+              <p id="customerViewPreviewProfilePicture"></p>
+              <h5 class="m-0" id="customerViewFullname">_Fullname_</h5>
+              <p class="small opacity-50" id="customerViewDataID">_Data_ID_</p>
+            </div>
+            <!-- ใส่ nickname ใน fullname -->
+
+            <div class="mb-4">
+              <h5>Information</h5>
+              <ul class="list-unstyled d-flex flex-column gap-1">
+                <li>ชื่อ-นามสกุล: <span class="text-primary" id="customerViewName">_Name_</span></li>
+                <li>เพศ: <span class="text-primary" id="customerViewSex">_Sex_</span></li>
+                <li>วันเกิด: <span class="text-primary" id="customerViewBirthday">_Birthday_</span></li>
+                <li>ที่อยู่: <span class="text-primary" id="customerViewAddress">_Address_</span></li>
+                <li>มือถือ: <span class="text-primary" id="customerViewMobile">_Mobile_</span></li>
+                <li>อีเมล: <span class="text-primary" id="customerViewEmail">_E-mail_</span></li>
+                <li>Facebook: <span class="text-primary" id="customerViewFacebook">_Facebook_</span></li>
+                <li>Instragram: <span class="text-primary" id="customerViewInstrgram">_Instrgram_</span></li>
+                <li>Line: <span class="text-primary" id="customerViewLine">_Line_</span></li>
+                <li>Tiktok: <span class="text-primary" id="customerViewTiktok">_Tiktok_</span></li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+        <!-- Card end -->
+
+      </div>
+      <!-- Modal body end -->
+
+    </div>
+  </div>
+</div>

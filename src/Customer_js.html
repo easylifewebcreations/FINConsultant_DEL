@@ -1,0 +1,158 @@
+<script>
+  // **************************************************** //
+// เพิ่มข้อมูล
+// **************************************************** //
+  function JAddDataCustomer() {
+    // JModalShow(MODAL_CUSTOMER) // แสดงโมดัล
+
+    // รีเซ็ทและกำหนดค่าเริ่มต้นฟอร์ม
+    // JResetForm(FORM_CUSTOMER)
+    document.getElementById('customerDataID').readOnly = true
+    document.getElementById('customerProfilePicture').innerHTML = ''
+    document.getElementById('customerSubmitButton').value = MODE_ADD
+  }
+
+
+
+// **************************************************** //
+// ตรวจสอบข้อมูล
+// **************************************************** //
+  function JValidateFormCustomer(_formObj) {
+    // เตรียมข้อมูลเพื่อตรวจสอบ
+    const dataObj = [
+      _formObj.titles.value,
+      _formObj.firstname.value.trim(),
+      _formObj.lastname.value.trim(),
+      _formObj.nickname.value.trim(),
+      _formObj.sex.value,
+      _formObj.birthday.value.trim(),
+      _formObj.mobile.value.trim(),
+      _formObj.email.value.trim()
+    ]
+  
+    // ตรวจสอบข้อมูล
+    if (JHasEmptyData(dataObj)) { // ข้อมูลไม่ถูกต้อง
+      SWAInfo(MSG_INPUT_FORM_ERROR) // แจ้งเตือนข้อผิดพลาด
+    } else { // ข้อมูลถูกต้อง
+      // JModalHide(MODAL_CUSTOMER) // ซ่อนโมดัล
+      SWALoading() // แสดงแถบโหลด
+      JSaveData(_formObj) // บันทึกข้อมูล
+    }
+  }
+
+
+
+// **************************************************** //
+// ดูข้อมูล
+// **************************************************** //
+  function JViewDataCustomer(_data) {
+    const fullname = _data.Titles + ' ' + _data.Firstname + ' (' + _data.Nickname + ') ' + _data.Lastname
+    const elementObj = [
+      { type: SET_INNERHTML, id: 'customerViewPreviewProfilePicture', value: '<img src="' + _data.ImageLH5 + '" class="img-fluid rounded-circle mb-2 img-5x" />'},
+      { type: SET_INNERHTML, id: 'customerViewFullname', value: fullname},
+      { type: SET_INNERHTML, id: 'customerViewDataID', value: _data.CustomerID},
+      { type: SET_INNERHTML, id: 'customerViewName', value: fullname},
+      { type: SET_INNERHTML, id: 'customerViewSex', value: _data.Sex},
+      { type: SET_INNERHTML, id: 'customerViewBirthday', value: _data.Birthday},
+      { type: SET_INNERHTML, id: 'customerViewAddress', value: _data.Address},
+      { type: SET_INNERHTML, id: 'customerViewMobile', value: _data.Mobile},
+      { type: SET_INNERHTML, id: 'customerViewEmail', value: _data.Email},
+      { type: SET_INNERHTML, id: 'customerViewFacebook', value: _data.Facebook},
+      { type: SET_INNERHTML, id: 'customerViewInstrgram', value: _data.Instagram},
+      { type: SET_INNERHTML, id: 'customerViewLine', value: _data.Line},
+      { type: SET_INNERHTML, id: 'customerViewTiktok', value: _data.Tiktok}
+    ]
+    JSetDataForm(elementObj)
+  }
+
+
+
+// **************************************************** //
+// แก้ไขข้อมูล
+// **************************************************** //
+  function JEditDataCustomer(_data) {
+    JResetForm(FORM_CUSTOMER)
+    const elementObj = [
+      { type: SET_VALUE, id: 'customerDataID', value: _data.CustomerID},
+      { type: SET_INNERHTML, id: 'customerProfilePicture', value: '<img src="' + _data.ImageLH5 + '" class="img-fluid rounded-circle mb-2 img-3x" />'},
+      { type: SET_VALUE_SELECT2, id: 'customerTitles', value: _data.Titles},
+      { type: SET_VALUE, id: 'customerFirstname', value: _data.Firstname},
+      { type: SET_VALUE, id: 'customerLastname', value: _data.Lastname},
+      { type: SET_VALUE, id: 'customerNickname', value: _data.Nickname},
+      { type: SET_VALUE_SELECT2, id: 'customerSex', value: _data.Sex},
+      { type: SET_VALUE, id: 'customerBirthday', value: _data.Birthday},
+      { type: SET_VALUE, id: 'customerAddress', value: _data.Address},
+      { type: SET_VALUE, id: 'customerMobile', value: _data.Mobile},
+      { type: SET_VALUE, id: 'customerEmail', value: _data.Email},
+      { type: SET_VALUE, id: 'customerFacebook', value: _data.Facebook},
+      { type: SET_VALUE, id: 'customerInstagram', value: _data.Instagram},
+      { type: SET_VALUE, id: 'customerLine', value: _data.Line},
+      { type: SET_VALUE, id: 'customerTiktok', value: _data.Tiktok},
+      { type: SET_VALUE, id: 'customerSubmitButton', value: MODE_EDIT}
+    ]
+    JSetDataForm(elementObj)
+  }
+
+
+
+// **************************************************** //
+// แสดงข้อมูลบน Datatables
+// **************************************************** //
+  function JDataTableCustomer(_data) {
+    // แปลงข้อมูล json เป็นอ็อบเจ็ค
+    // const data = JSON.parse(_jsonData)
+    const state = _data.state
+    const items = _data.values
+
+    // ตรวจสอบสถานะข้อมูล
+    if (state) {
+      $(document).ready(function(){
+        $('#customersTable').DataTable({
+          destroy: true,
+          responsive: true,
+          data: items,
+          colReorder: true,
+          lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "ทั้งหมด"]],
+          order: [[0, "desc"]], 
+          sPaginationType: "full_numbers",
+          columns: [
+            { title: "ID" },
+            { title: "PHOTO",
+              render: function(data, type, row, meta) {
+                return '<img src="' + data + '" class="img-fluid rounded-circle mb-2 img-3x" />'
+            }},
+            { title: "FIRSTNAME" },
+            { title: "LASTNAME" },
+            { title: "NICKNAME" },
+            { title: "BIRTHDAY"},
+            { title: "ACTIONS",
+              render: function(data, type, row, meta) {
+                return '<div class="d-inline-flex gap-2">' +
+                  '<button type="button" class="btn btn-success" onclick="JViewData(this)" value="' + MODULE_CUSTOMER + ':' + row[0] + '"><i class="bi bi-eye"></i></button>' +
+								  '<button type="button" class="btn btn-primary" onclick="JEditData(this)" value="' + MODULE_CUSTOMER + ':' + row[0] + '"><i class="bi bi-pencil"></i></button>' +
+                  '<button type="button" class="btn btn-danger" onclick="JDeleteData(this)" value="' + MODULE_CUSTOMER  + ':' + row[0] + '"><i class="bi bi-trash3"></i></button>' +
+                  '</div>'            
+            }}
+          ],
+          language: {
+            sProcessing: "กำลังดำเนินการ...",
+            sLengthMenu: "แสดง _MENU_ แถว",
+            sZeroRecords: "ไม่มีข้อมูล",
+            sInfo: "แสดง _START_ ถึง _END_ จาก _TOTAL_ แถว",
+            sInfoEmpty: "แสดง 0 ถึง 0 จาก 0 แถว",
+            sInfoFiltered: "(กรองข้อมูล _MAX_ ทุกแถว)",
+            sInfoPostFix: "",
+            sSearch: "ค้นหา:",
+            sUrl: "",
+            oPaginate: {
+              sFirst: "<< หน้าแรก",
+              sPrevious: "< ก่อนหน้า",
+              sNext: "ถัดไป >",
+              sLast: "หน้าสุดท้าย >>"
+            }
+          },
+        })
+      })
+    }
+  }
+</script>
